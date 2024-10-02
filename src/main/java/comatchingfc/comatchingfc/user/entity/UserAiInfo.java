@@ -19,7 +19,7 @@ public class UserAiInfo extends BaseEntity {
     @OneToOne(mappedBy = "userAiInfo", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Users users;
 
-    @OneToOne(mappedBy = "userAiInfo", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "userFeatureAiInfo", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private UserFeature userFeature;
 
     @Column(columnDefinition = "BINARY(16)")
@@ -35,6 +35,13 @@ public class UserAiInfo extends BaseEntity {
         this.users = users;
         if (users.getUserAiInfo() != this) {
             users.setUserAiInfo(this);
+        }
+    }
+
+    public void setUserFeature(UserFeature userFeature) {
+        this.userFeature = userFeature;
+        if (userFeature.getUserFeatureAiInfo() != this) {
+            userFeature.setUserAiInfo(this);
         }
     }
 }

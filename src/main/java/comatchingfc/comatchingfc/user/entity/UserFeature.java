@@ -4,6 +4,7 @@ import comatchingfc.comatchingfc.user.enums.Gender;
 import comatchingfc.comatchingfc.utils.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,7 +21,8 @@ public class UserFeature extends BaseEntity {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private UserAiInfo userAiInfo;
+    @JoinColumn(name = "user_ai_info_id", unique = true)
+    private UserAiInfo userFeatureAiInfo;
 
     @OneToMany(mappedBy = "userFeature", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CheerPropensity> cheerPropensities = new ArrayList<>();
@@ -29,4 +31,31 @@ public class UserFeature extends BaseEntity {
     private Gender gender;
 
     private int age;
+
+    @Builder
+    public UserFeature(Gender gender, int age) {
+        this.gender = gender;
+        this.age = age;
+    }
+
+    public void setUserAiInfo(UserAiInfo userAiInfo) {
+        this.userFeatureAiInfo = userAiInfo;
+        if (userAiInfo.getUserFeature() != this) {
+            userAiInfo.setUserFeature(this);
+        }
+    }
+
+    public void addCheerPropensity(CheerPropensity cheerPropensity) {
+        cheerPropensities.add(cheerPropensity);
+        if (cheerPropensity.getUserFeature() != this) {
+            cheerPropensity.setUserFeature(this);
+        }
+    }
+
+    public void removeCheerPropensity(CheerPropensity cheerPropensity) {
+        cheerPropensities.remove(cheerPropensity);
+        if (cheerPropensity.getUserFeature() == this) {
+            cheerPropensity.setUserFeature(null);
+        }
+    }
 }
