@@ -2,6 +2,7 @@ package comatchingfc.comatchingfc.user.entity;
 
 import comatchingfc.comatchingfc.survey.response.entity.SurveyResponse;
 import comatchingfc.comatchingfc.user.enums.UserRole;
+import comatchingfc.comatchingfc.utils.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,15 +16,15 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Users {
+public class Users extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_ai_feature_id", unique = true)
-    private UserAiFeature userAiFeature;
+    @JoinColumn(name = "user_ai_info_id", unique = true)
+    private UserAiInfo userAiInfo;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SurveyResponse> surveyResponses = new ArrayList<>();
@@ -46,10 +47,10 @@ public class Users {
         this.socialId = socialId;
     }
 
-    public void setUserAiFeature(UserAiFeature userAiFeature) {
-        this.userAiFeature = userAiFeature;
-        if (userAiFeature.getUsers() != this) {
-            userAiFeature.setUsers(this);
+    public void setUserAiInfo(UserAiInfo userAiInfo) {
+        this.userAiInfo = userAiInfo;
+        if (userAiInfo.getUsers() != this) {
+            userAiInfo.setUsers(this);
         }
     }
 

@@ -3,6 +3,7 @@ package comatchingfc.comatchingfc.survey.response.entity;
 import comatchingfc.comatchingfc.survey.choice.entity.Choice;
 import comatchingfc.comatchingfc.survey.question.entity.Question;
 import comatchingfc.comatchingfc.user.entity.Users;
+import comatchingfc.comatchingfc.utils.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Table(
         uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "question_id"})
 )
-public class SurveyResponse {
+public class SurveyResponse extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "response_id")
