@@ -4,11 +4,10 @@ import comatchingfc.comatchingfc.user.enums.Gender;
 import comatchingfc.comatchingfc.user.enums.UserRole;
 import comatchingfc.comatchingfc.user.repository.UserAiFeatureRepository;
 import comatchingfc.comatchingfc.user.repository.UserRepository;
-import comatchingfc.comatchingfc.utils.UUIDUtil;
+import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -18,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test") // "test" 프로파일 활성화
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // 내장 데이터베이스 사용 설정
 class UsersTest {
 
     @Autowired private UserRepository userRepository;

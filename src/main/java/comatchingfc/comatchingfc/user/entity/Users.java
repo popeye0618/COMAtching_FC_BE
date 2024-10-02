@@ -1,11 +1,15 @@
 package comatchingfc.comatchingfc.user.entity;
 
+import comatchingfc.comatchingfc.survey.response.entity.SurveyResponse;
 import comatchingfc.comatchingfc.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -20,6 +24,9 @@ public class Users {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_ai_feature_id", unique = true)
     private UserAiFeature userAiFeature;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SurveyResponse> surveyResponses = new ArrayList<>();
 
     private String username;
 
@@ -43,6 +50,20 @@ public class Users {
         this.userAiFeature = userAiFeature;
         if (userAiFeature.getUsers() != this) {
             userAiFeature.setUsers(this);
+        }
+    }
+
+    public void addSurveyResponse(SurveyResponse surveyResponse) {
+        surveyResponses.add(surveyResponse);
+        if (surveyResponse.getUser() != this) {
+            surveyResponse.setUser(this);
+        }
+    }
+
+    public void removeSurveyResponse(SurveyResponse surveyResponse) {
+        surveyResponses.remove(surveyResponse);
+        if (surveyResponse.getUser() == this) {
+            surveyResponse.setUser(null);
         }
     }
 

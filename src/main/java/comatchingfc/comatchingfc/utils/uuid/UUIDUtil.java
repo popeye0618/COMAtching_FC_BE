@@ -1,4 +1,4 @@
-package comatchingfc.comatchingfc.utils;
+package comatchingfc.comatchingfc.utils.uuid;
 
 import com.fasterxml.uuid.Generators;
 
