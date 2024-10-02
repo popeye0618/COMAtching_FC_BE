@@ -2,6 +2,8 @@ package comatchingfc.comatchingfc.survey.choice.entity;
 
 import comatchingfc.comatchingfc.survey.question.entity.Question;
 import comatchingfc.comatchingfc.survey.response.entity.SurveyResponse;
+import comatchingfc.comatchingfc.user.enums.CheerPropensity;
+import comatchingfc.comatchingfc.utils.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,7 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Choice {
+public class Choice extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,12 +32,12 @@ public class Choice {
 
     private String choiceText;
 
-    private String cheerPropensity;
+    private CheerPropensity cheerPropensity;
 
     private int score;
 
     @Builder
-    public Choice(String choiceText, String cheerPropensity, int score) {
+    public Choice(String choiceText, CheerPropensity cheerPropensity, int score) {
         this.choiceText = choiceText;
         this.cheerPropensity = cheerPropensity;
         this.score = score;
