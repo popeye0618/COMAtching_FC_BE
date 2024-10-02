@@ -29,6 +29,8 @@ public class Users extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SurveyResponse> surveyResponses = new ArrayList<>();
 
+    private String identifyKey;
+
     private String username;
 
     private int age;
@@ -41,7 +43,8 @@ public class Users extends BaseEntity {
     private Boolean deactivated = false;
 
     @Builder
-    public Users(String username, int age, String socialId) {
+    public Users(String identifyKey, String username, int age, String socialId) {
+        this.identifyKey = identifyKey;
         this.username = username;
         this.age = age;
         this.socialId = socialId;
