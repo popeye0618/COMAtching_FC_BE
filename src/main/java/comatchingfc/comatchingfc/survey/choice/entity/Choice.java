@@ -2,6 +2,7 @@ package comatchingfc.comatchingfc.survey.choice.entity;
 
 import comatchingfc.comatchingfc.survey.question.entity.Question;
 import comatchingfc.comatchingfc.survey.response.entity.SurveyResponse;
+import comatchingfc.comatchingfc.utils.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Choice {
+public class Choice extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
