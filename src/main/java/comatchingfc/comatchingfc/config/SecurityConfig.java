@@ -68,7 +68,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/auth/refresh").permitAll()
+                        .requestMatchers("/login", "/auth/refresh", "/admin/register", "/admin/login").permitAll()
                         .requestMatchers("/auth/admin/**").hasRole("ADMIN")
                         .requestMatchers("/auth/pending/**").hasRole("PENDING")
                         .requestMatchers("/auth/user/**").hasRole("USER")

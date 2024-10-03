@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -31,7 +30,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private static final List<String> WHITELIST = List.of(
             "/login",
-            "/auth/refresh"
+            "/auth/refresh",
+            "/admin/register",
+            "/admin/login"
     );
 
     @Override
@@ -52,6 +53,8 @@ public class JwtFilter extends OncePerRequestFilter {
             if (accessToken != null && !jwtUtil.isExpired(accessToken)) {
                 log.info("엑세스 토큰 유효");
                 setAuthentication(accessToken);
+                filterChain.doFilter(request, response);
+                return;
             }
         } catch (ExpiredJwtException e) {
             log.info("엑세스 토큰 만료");
