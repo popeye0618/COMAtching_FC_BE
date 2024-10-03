@@ -4,6 +4,7 @@ import comatchingfc.comatchingfc.auth.jwt.JwtUtil;
 import comatchingfc.comatchingfc.auth.jwt.refresh.service.RefreshTokenService;
 import comatchingfc.comatchingfc.utils.response.Response;
 import comatchingfc.comatchingfc.utils.response.ResponseCode;
+import comatchingfc.comatchingfc.utils.security.SecurityUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,6 +22,7 @@ public class RefreshTokenController {
 
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
+    private final SecurityUtil securityUtil;
 
     @PostMapping("/auth/refresh")
     public Response<?> refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
@@ -59,22 +61,10 @@ public class RefreshTokenController {
             refreshTokenService.saveRefreshToken(uuid, newRefreshToken);
 
             // Access Token을 HttpOnly 쿠키에 설정
-            ResponseCookie accessCookie = ResponseCookie.from("accessToken", newAccessToken)
-                    .httpOnly(true)
-                    .secure(false) // HTTPS 환경에서만 전송하려면 true
-                    .path("/")
-                    .maxAge(60 * 60)
-                    .sameSite("Strict")
-                    .build();
+            ResponseCookie accessCookie = securityUtil.setAccessResponseCookie(newAccessToken);
 
             // Refresh Token을 HttpOnly 쿠키에 설정
-            ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", newRefreshToken)
-                    .httpOnly(true)
-                    .secure(false)
-                    .path("/auth/refresh")
-                    .maxAge(24 * 60 * 60) // 1일
-                    .sameSite("Strict")
-                    .build();
+            ResponseCookie refreshCookie = securityUtil.setRefreshResponseCookie(newRefreshToken);
 
             response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
             response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
