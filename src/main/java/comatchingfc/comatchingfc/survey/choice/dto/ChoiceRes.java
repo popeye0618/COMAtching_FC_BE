@@ -1,5 +1,6 @@
 package comatchingfc.comatchingfc.survey.choice.dto;
 
+import comatchingfc.comatchingfc.user.enums.CheerPropensityEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,5 +14,5 @@ import java.util.Map;
 @AllArgsConstructor
 public class ChoiceRes {
     private String choiceText;
-    private Map<String, Integer> cheerPropensities;
+    private Map<CheerPropensityEnum, Integer> cheerPropensities;
 }
