@@ -1,14 +1,17 @@
 package comatchingfc.comatchingfc.auth.service;
 
+import comatchingfc.comatchingfc.auth.TokenUtil;
 import comatchingfc.comatchingfc.auth.dto.UserLoginReq;
 import comatchingfc.comatchingfc.auth.enums.TicketType;
-import comatchingfc.comatchingfc.auth.jwt.JwtUtil;
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;
-import comatchingfc.comatchingfc.auth.jwt.refresh.service.RefreshTokenRedisService;
+import comatchingfc.comatchingfc.exception.BusinessException;
 import comatchingfc.comatchingfc.user.entity.UserAiInfo;
+import comatchingfc.comatchingfc.user.entity.UserFeature;
 import comatchingfc.comatchingfc.user.entity.Users;
 import comatchingfc.comatchingfc.user.repository.UserAiInfoRepository;
+import comatchingfc.comatchingfc.user.repository.UserFeatureRepository;
 import comatchingfc.comatchingfc.user.repository.UserRepository;
+import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,8 +25,8 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final UserAiInfoRepository userAiInfoRepository;
-    private final JwtUtil jwtUtil;
-    private final RefreshTokenRedisService refreshTokenRedisService;
+    private final UserFeatureRepository userFeatureRepository;
+    private final TokenUtil tokenUtil;
 
     @Transactional
     public TokenRes userLogin(UserLoginReq userLoginReq) {
@@ -47,31 +50,27 @@ public class AuthService {
                     .uuid(UUIDUtil.createUUID())
                     .build();
 
+            UserFeature userFeature = UserFeature.builder().build();
+
             userAiInfo.setUsers(user);
+            userFeature.setUserAiInfo(userAiInfo);
 
             userRepository.save(user);
             userAiInfoRepository.save(userAiInfo);
+            userFeatureRepository.save(userFeature);
 
             userUuid = UUIDUtil.bytesToHex(userAiInfo.getUuid());
             userRole = user.getRole().toString();
 
         } else {
             Users user = userOpt.get();
+            if (user.getDeactivated()) {
+                throw new BusinessException(ResponseCode.DEACTIVATED_USER);
+            }
             userUuid = UUIDUtil.bytesToHex(user.getUserAiInfo().getUuid());
             userRole = user.getRole().toString();
         }
 
-        String accessToken = jwtUtil.generateAccessToken(userUuid, userRole);
-        String refreshToken = refreshTokenRedisService.getRefreshToken(userUuid);
-
-        if (refreshToken == null) {
-            refreshToken = jwtUtil.generateRefreshToken(userUuid, userRole);
-            refreshTokenRedisService.saveRefreshToken(userUuid, refreshToken);
-        }
-
-        return TokenRes.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        return tokenUtil.makeTokenRes(userUuid, userRole);
     }
 }

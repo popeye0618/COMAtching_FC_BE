@@ -8,6 +8,8 @@ import comatchingfc.comatchingfc.auth.jwt.JwtUtil;
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;
 import comatchingfc.comatchingfc.auth.jwt.refresh.service.RefreshTokenRedisService;
 import comatchingfc.comatchingfc.exception.BusinessException;
+import comatchingfc.comatchingfc.user.entity.Users;
+import comatchingfc.comatchingfc.user.repository.UserRepository;
 import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminService {
 
     private final AdminRepository adminRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final RefreshTokenRedisService refreshTokenRedisService;
@@ -75,5 +78,13 @@ public class AdminService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    @Transactional
+    public void activateUser(String ticket) {
+        Users user = userRepository.findByIdentifyKey(ticket)
+                .orElseThrow(() -> new BusinessException(ResponseCode.USER_NOT_FOUND));
+
+        user.activateUser();
     }
 }

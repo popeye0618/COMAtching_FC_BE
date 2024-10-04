@@ -1,8 +1,6 @@
 package comatchingfc.comatchingfc.survey.choice.entity;
 
 import comatchingfc.comatchingfc.survey.question.entity.Question;
-import comatchingfc.comatchingfc.survey.response.entity.SurveyResponse;
-import comatchingfc.comatchingfc.user.enums.CheerPropensity;
 import comatchingfc.comatchingfc.utils.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,8 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -28,19 +26,24 @@ public class Choice extends BaseEntity {
     private Question question;
 
     @OneToMany(mappedBy = "choice", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SurveyResponse> surveyResponses = new ArrayList<>();
+    private Set<ChoiceCheerPropensity> cheerPropensities = new HashSet<>();
 
     private String choiceText;
 
-    private CheerPropensity cheerPropensity;
-
-    private int score;
-
     @Builder
-    public Choice(String choiceText, CheerPropensity cheerPropensity, int score) {
+    public Choice(String choiceText, Question question) {
         this.choiceText = choiceText;
-        this.cheerPropensity = cheerPropensity;
-        this.score = score;
+        setQuestion(question);
+    }
+
+    public void addCheerPropensity(ChoiceCheerPropensity cheerPropensity) {
+        this.cheerPropensities.add(cheerPropensity);
+        cheerPropensity.setChoice(this);
+    }
+
+    public void removeCheerPropensity(ChoiceCheerPropensity cheerPropensity) {
+        this.cheerPropensities.remove(cheerPropensity);
+        cheerPropensity.setChoice(null);
     }
 
     public void setQuestion(Question question) {
@@ -50,20 +53,6 @@ public class Choice extends BaseEntity {
         this.question = question;
         if (question != null && !question.getChoices().contains(this)) {
             question.getChoices().add(this);
-        }
-    }
-
-    public void addSurveyResponse(SurveyResponse surveyResponse) {
-        surveyResponses.add(surveyResponse);
-        if (surveyResponse.getChoice() != this) {
-            surveyResponse.setChoice(this);
-        }
-    }
-
-    public void removeSurveyResponse(SurveyResponse surveyResponse) {
-        surveyResponses.remove(surveyResponse);
-        if (surveyResponse.getChoice() == this) {
-            surveyResponse.setChoice(null);
         }
     }
 }

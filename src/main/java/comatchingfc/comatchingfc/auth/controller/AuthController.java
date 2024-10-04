@@ -6,6 +6,7 @@ import comatchingfc.comatchingfc.auth.service.AuthService;
 import comatchingfc.comatchingfc.utils.response.Response;
 import comatchingfc.comatchingfc.utils.security.SecurityUtil;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,7 @@ public class AuthController {
     private final SecurityUtil securityUtil;
 
     @PostMapping("/user/login")
-    public Response<Void> userLogin(@RequestBody UserLoginReq userLoginReq, HttpServletResponse response) {
+    public Response<Void> userLogin(@RequestBody @Valid UserLoginReq userLoginReq, HttpServletResponse response) {
 
         TokenRes tokenRes = authService.userLogin(userLoginReq);
 

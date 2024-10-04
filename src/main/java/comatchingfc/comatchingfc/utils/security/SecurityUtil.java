@@ -89,4 +89,25 @@ public class SecurityUtil {
                 .build();
         return accessCookie;
     }
+
+    public ResponseCookie deleteAccessResponseCookie() {
+        return ResponseCookie.from("accessToken", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0) // 쿠키 삭제
+                .sameSite("Strict")
+                .build();
+    }
+
+    public ResponseCookie deleteRefreshResponseCookie() {
+        return ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/auth/refresh")
+                .maxAge(0) // 쿠키 삭제
+                .sameSite("Strict")
+                .build();
+    }
+
 }

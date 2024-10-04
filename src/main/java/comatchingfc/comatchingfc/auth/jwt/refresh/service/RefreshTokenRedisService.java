@@ -14,11 +14,20 @@ import static comatchingfc.comatchingfc.auth.jwt.JwtExpirationConst.REFRESH_TOKE
 public class RefreshTokenRedisService {
     private final RedisTemplate<String, Object> redisTemplate;
 
+    private static final String REFRESH_TOKEN_PREFIX = "refreshToken:";
+
     public void saveRefreshToken(String uuid, String refreshToken) {
-        redisTemplate.opsForValue().set(uuid, refreshToken, REFRESH_TOKEN_EXPIRATION, TimeUnit.MILLISECONDS);
+        String key = REFRESH_TOKEN_PREFIX + uuid;
+        redisTemplate.opsForValue().set(key, refreshToken, REFRESH_TOKEN_EXPIRATION, TimeUnit.MILLISECONDS);
     }
 
     public String getRefreshToken(String uuid) {
-        return (String) redisTemplate.opsForValue().get(uuid);
+        String key = REFRESH_TOKEN_PREFIX + uuid;
+        return (String) redisTemplate.opsForValue().get(key);
+    }
+
+    public void deleteRefreshToken(String uuid) {
+        String key = REFRESH_TOKEN_PREFIX + uuid;
+        redisTemplate.delete(key);
     }
 }

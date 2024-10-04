@@ -1,6 +1,6 @@
 package comatchingfc.comatchingfc.user.entity;
 
-import comatchingfc.comatchingfc.survey.response.entity.SurveyResponse;
+import comatchingfc.comatchingfc.user.enums.CheerPropensityEnum;
 import comatchingfc.comatchingfc.user.enums.UserRole;
 import comatchingfc.comatchingfc.utils.BaseEntity;
 import jakarta.persistence.*;
@@ -9,8 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -26,18 +24,16 @@ public class Users extends BaseEntity {
     @JoinColumn(name = "user_ai_info_id", unique = true)
     private UserAiInfo userAiInfo;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SurveyResponse> surveyResponses = new ArrayList<>();
-
     private String identifyKey;
 
     private String username;
 
-    private int age;
-
     private String socialId;
 
     private String cheeringPlayer;
+
+    @Enumerated(EnumType.STRING)
+    private CheerPropensityEnum cheerPropensity;
 
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.ROLE_PENDING;
@@ -45,10 +41,9 @@ public class Users extends BaseEntity {
     private Boolean deactivated = false;
 
     @Builder
-    public Users(String identifyKey, String username, int age, String socialId, String cheeringPlayer) {
+    public Users(String identifyKey, String username, String socialId, String cheeringPlayer) {
         this.identifyKey = identifyKey;
         this.username = username;
-        this.age = age;
         this.socialId = socialId;
         this.cheeringPlayer = cheeringPlayer;
     }
@@ -60,29 +55,23 @@ public class Users extends BaseEntity {
         }
     }
 
-    public void addSurveyResponse(SurveyResponse surveyResponse) {
-        surveyResponses.add(surveyResponse);
-        if (surveyResponse.getUser() != this) {
-            surveyResponse.setUser(this);
-        }
-    }
-
-    public void removeSurveyResponse(SurveyResponse surveyResponse) {
-        surveyResponses.remove(surveyResponse);
-        if (surveyResponse.getUser() == this) {
-            surveyResponse.setUser(null);
-        }
-    }
-
     public void updateUsername(String username) {
         this.username = username;
     }
 
-    public void updateAge(int age) {
-        this.age = age;
+    public void updateSocialId(String socialId) {
+        this.socialId = socialId;
     }
 
-    public void setRoleToUser() {
+    public void updateCheeringPlayer(String cheeringPlayer) {
+        this.cheeringPlayer = cheeringPlayer;
+    }
+
+    public void updateCheerPropensity(CheerPropensityEnum cheerPropensity) {
+        this.cheerPropensity = cheerPropensity;
+    }
+
+    public void updateRoleToUser() {
         this.role = UserRole.ROLE_USER;
     }
 
