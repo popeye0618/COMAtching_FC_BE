@@ -58,4 +58,12 @@ public class UserFeature extends BaseEntity {
             cheerPropensity.setUserFeature(null);
         }
     }
+
+    public void updateGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public void updateAge(int age) {
+        this.age = age;
+    }
 }
