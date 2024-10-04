@@ -17,7 +17,9 @@ public enum ResponseCode {
 	ACCOUNT_ID_DUPLICATED(409, "SEC-003", HttpStatus.CONFLICT, "AccountId is duplicated"),
 	INVALID_LOGIN(403, "SEC-004", HttpStatus.FORBIDDEN, "Invalid AccountId or Password"),
 	USER_NOT_FOUND(404, "SEC-005", HttpStatus.NOT_FOUND, "Cannot found user"),
-	ACCESS_DENIED(403, "SEC-004", HttpStatus.FORBIDDEN, "Access denied");
+	ACCESS_DENIED(403, "SEC-006", HttpStatus.FORBIDDEN, "Access denied"),
+	INVALID_TICKET(403, "SEC-007", HttpStatus.FORBIDDEN, "Invalid ticket"),
+	DEACTIVATED_USER(403, "SEC-008", HttpStatus.FORBIDDEN, "Deactivated User");
 
 	private final Integer status;
 	private final String code;
