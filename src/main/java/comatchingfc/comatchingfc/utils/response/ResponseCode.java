@@ -11,6 +11,9 @@ public enum ResponseCode {
 	BAD_REQUEST(400, "GEN-001", HttpStatus.BAD_REQUEST, "Bad Request"),
 	INTERNAL_SERVER_ERROR(500, "GEN-002", HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred"),
 
+	//Match response
+	MATCH_GENERAL_FAIL(400, "MAT-001", HttpStatus.INTERNAL_SERVER_ERROR, "Matching process was fail"),
+
 	//Auth response
 	TOKEN_EXPIRED(401, "SEC-001", HttpStatus.UNAUTHORIZED, "Token is expired"),
 	JWT_ERROR(403, "SEC-002", HttpStatus.FORBIDDEN, "Jwt error occurred"),

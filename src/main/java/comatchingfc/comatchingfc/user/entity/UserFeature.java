@@ -1,6 +1,8 @@
 package comatchingfc.comatchingfc.user.entity;
 
+import comatchingfc.comatchingfc.user.enums.CheerPropensityEnum;
 import comatchingfc.comatchingfc.user.enums.Gender;
+import comatchingfc.comatchingfc.user.enums.TeamSide;
 import comatchingfc.comatchingfc.utils.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -31,6 +33,12 @@ public class UserFeature extends BaseEntity {
     private Gender gender;
 
     private int age;
+
+    @Enumerated(value = EnumType.STRING)
+    private CheerPropensityEnum cheerPropensityEnum;
+
+    @Enumerated(value = EnumType.STRING)
+    private TeamSide teamSide;
 
     @Builder
     public UserFeature(Gender gender, int age) {
