@@ -47,7 +47,7 @@ public class MatchingRabbitMQUtil {
 			responseType);
 
 		if(responseMsg == null){
-			throw new BusinessException(ResponseCode.GEN_MATCH_FAIL);
+			throw new BusinessException(ResponseCode.MATCH_GENERAL_FAIL);
 		}
 
 		log.info("[MatchingRabbitMQUtil requestMatch] stateCode = {} / responseMsg.getEnemyUuid={} ", responseMsg.getStateCode(), responseMsg.getEnemyUuid());
