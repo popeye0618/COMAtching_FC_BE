@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 
-import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.ReserveAuthReq;
-import comatchingfc.comatchingfc.utils.rabbitMQ.Message.res.ReserveAuthRes;
+import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.ReserveAuthReqMsg;
+import comatchingfc.comatchingfc.utils.rabbitMQ.Message.res.ReserveAuthResMsg;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,12 +34,12 @@ public class AuthRabbitMQUtil {
 	public boolean checkReserveNumber(String reserveNumber){
 		String requestId = UUID.randomUUID().toString();
 
-		ReserveAuthReq requestMsg = new ReserveAuthReq(reserveNumber);
+		ReserveAuthReqMsg requestMsg = new ReserveAuthReqMsg(reserveNumber);
 		CorrelationData correlationData = new CorrelationData(requestId);
-		ParameterizedTypeReference<ReserveAuthRes> responseType = new ParameterizedTypeReference<ReserveAuthRes>(){};
+		ParameterizedTypeReference<ReserveAuthResMsg> responseType = new ParameterizedTypeReference<ReserveAuthResMsg>(){};
 
 
-		ReserveAuthRes responseMsg =  rabbitTemplate.convertSendAndReceiveAsType(
+		ReserveAuthResMsg responseMsg =  rabbitTemplate.convertSendAndReceiveAsType(
 			matchRequestQueue,
 			requestMsg,
 			(MessagePostProcessor) null,
