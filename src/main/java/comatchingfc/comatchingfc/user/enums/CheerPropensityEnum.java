@@ -1,5 +1,9 @@
 package comatchingfc.comatchingfc.user.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import comatchingfc.comatchingfc.user.entity.CheerPropensity;
 import lombok.Getter;
 
 @Getter
@@ -18,4 +22,21 @@ public enum CheerPropensityEnum {
         this.value = value;
         this.discription = discription;
     }
+
+    @JsonCreator
+    public static CheerPropensityEnum from(String value) {
+        for (CheerPropensityEnum cheerPropensityEnum : CheerPropensityEnum.values()) {
+            if (cheerPropensityEnum.getValue().equals(value)) {
+                return cheerPropensityEnum;
+            }
+        }
+        return null;
+    }
+
+    @JsonValue
+    public String getValue() {
+        return value;
+    }
+
+
 }
