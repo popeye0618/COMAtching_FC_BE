@@ -74,7 +74,7 @@ public class MatchReqMsg {
 			.myPropensity4(8)
 			.myPropensity5(4)
 			.myPropensity6(1)
-			.teamOption(HOME)
+			.teamOption(AWAY)
 			.genderOption(FEMALE)
 			.build();
 	}
