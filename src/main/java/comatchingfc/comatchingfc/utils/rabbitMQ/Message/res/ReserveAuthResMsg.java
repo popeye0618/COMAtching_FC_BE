@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ReserveAuthRes {
+public class ReserveAuthResMsg {
 	private String stateCode;
 	private String teamSide;
 	private boolean authSuccess;

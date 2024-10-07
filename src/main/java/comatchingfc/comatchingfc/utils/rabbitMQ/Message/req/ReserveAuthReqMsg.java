@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReserveAuthReq {
+public class ReserveAuthReqMsg {
 	private String reserveNumber;
 }
