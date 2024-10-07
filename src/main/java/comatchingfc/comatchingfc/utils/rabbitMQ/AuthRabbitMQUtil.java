@@ -26,7 +26,11 @@ public class AuthRabbitMQUtil {
 		this.rabbitTemplate = rabbitTemplate;
 	}
 
-
+	/**
+	 * 예매 번호 인증 요청
+	 * @param reserveNumber : 예매번호
+	 * @return : boolean - 인증 성공 여부
+	 */
 	public boolean checkReserveNumber(String reserveNumber){
 		String requestId = UUID.randomUUID().toString();
 
