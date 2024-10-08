@@ -20,7 +20,7 @@ public class MatchService {
 	private final MatchingRabbitMQUtil matchingRabbitMQUtil;
 
 	public Response requestAuth(AuthReq req){
-		boolean isSuccess = authRabbitMQUtil.checkReserveNumber(req.getReserveCode());
+		boolean isSuccess = authRabbitMQUtil.checkReserveNumber(req.getReserveCode()).isAuthSuccess();
 
 		if(isSuccess){
 			return Response.ok();

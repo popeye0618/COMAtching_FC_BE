@@ -65,17 +65,17 @@ public class MatchReqMsg {
 	public static MatchReqMsg majeTest(String uuid){
 		return MatchReqMsg.builder()
 			.matcherUuid(uuid)
-			.myGender(MALE)
-			.myAge(22)
-			.myPropensity(먹방형.getValue())
-			.myPropensity1(1)
-			.myPropensity2(6)
-			.myPropensity3(2)
-			.myPropensity4(8)
-			.myPropensity5(4)
+			.myGender(FEMALE)
+			.myAge(24)
+			.myPropensity(인싸형.getValue())
+			.myPropensity1(0)
+			.myPropensity2(3)
+			.myPropensity3(1)
+			.myPropensity4(4)
+			.myPropensity5(3)
 			.myPropensity6(1)
-			.teamOption(AWAY)
-			.genderOption(FEMALE)
+			.teamOption(HOME)
+			.genderOption(MALE)
 			.build();
 	}
 
