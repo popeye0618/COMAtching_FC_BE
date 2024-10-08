@@ -31,7 +31,7 @@ public class AuthRabbitMQUtil {
 	 * @param reserveNumber : 예매번호
 	 * @return : boolean - 인증 성공 여부
 	 */
-	public boolean checkReserveNumber(String reserveNumber){
+	public ReserveAuthResMsg checkReserveNumber(String reserveNumber){
 		String requestId = UUID.randomUUID().toString();
 
 		ReserveAuthReqMsg requestMsg = new ReserveAuthReqMsg(reserveNumber);
@@ -46,6 +46,6 @@ public class AuthRabbitMQUtil {
 			correlationData,
 			responseType);
 
-		return responseMsg.isAuthSuccess();
+		return responseMsg;
 	}
 }
