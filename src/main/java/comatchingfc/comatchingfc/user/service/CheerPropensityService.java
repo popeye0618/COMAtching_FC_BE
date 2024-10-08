@@ -2,6 +2,9 @@ package comatchingfc.comatchingfc.user.service;
 
 import comatchingfc.comatchingfc.auth.TokenUtil;
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;
+import comatchingfc.comatchingfc.player.dto.PlayerRes;
+import comatchingfc.comatchingfc.player.service.PlayerService;
+import comatchingfc.comatchingfc.user.dto.SavePropensityRes;
 import comatchingfc.comatchingfc.user.dto.SurveyResult;
 import comatchingfc.comatchingfc.user.entity.CheerPropensity;
 import comatchingfc.comatchingfc.user.entity.UserFeature;
@@ -26,9 +29,10 @@ public class CheerPropensityService {
     private final CheerPropensityRepository cheerPropensityRepository;
     private final SecurityUtil securityUtil;
     private final TokenUtil tokenUtil;
+    private final PlayerService playerService;
 
     @Transactional
-    public TokenRes saveCheerPropensity(SurveyResult surveyResult) {
+    public SavePropensityRes saveCheerPropensity(SurveyResult surveyResult) {
         Users user = securityUtil.getCurrentUserEntity();
         UserFeature userFeature = user.getUserAiInfo().getUserFeature();
 
@@ -61,13 +65,17 @@ public class CheerPropensityService {
         // 쿼리 수 줄이기
         cheerPropensityRepository.saveAll(cheerPropensities);
 
-        user.updateCheerPropensity(surveyResult.getHighestCheerPropensityType());
+        CheerPropensityEnum type = surveyResult.getHighestCheerPropensityType();
+        userFeature.updateCheerPropensity(type);
         user.updateRoleToUser();
 
         String userUuid = UUIDUtil.bytesToHex(user.getUserAiInfo().getUuid());
         String userRole = user.getRole().toString();
 
-        return tokenUtil.makeTokenRes(userUuid, userRole);
+        TokenRes tokenRes = tokenUtil.makeTokenRes(userUuid, userRole);
+        List<PlayerRes> samePropensityPlayers = playerService.getSamePropensityPlayers(type);
+
+        return new SavePropensityRes(type.getValue(), samePropensityPlayers, tokenRes);
     }
 
     private CheerPropensity buildCheerPropensities(CheerPropensityEnum cheerPropensityEnum, int score) {

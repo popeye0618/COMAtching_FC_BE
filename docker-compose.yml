@@ -1,6 +1,6 @@
 services:
   app:
-    image: smdmim/comatchingfc-app:latest
+    image: popeye0618/comatching_fc:latest
     ports:
       - "8080:8080"
     depends_on:
@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     networks:
-      - backend
+      - fc_backend
 
   mysql:
     image: mysql:8.0
@@ -19,10 +19,10 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql-test-data:/var/lib/mysql
       - ./my.cnf:/etc/mysql/my.cnf
     networks:
-      - backend
+      - fc_backend
 
   redis:
     image: redis:latest
@@ -31,13 +31,13 @@ services:
       - "6379:6379"
     command: redis-server --requirepass ${SPRING_REDIS_PASSWORD} --port 6379
     volumes:
-      - redis-data:/data  # Redis 볼륨 추가
+      - redis-test-data:/data  # Redis 볼륨 추가
     networks:
-      - backend
+      - fc_backend
 
 networks:
-  backend:
+  fc_backend:
 
 volumes:
-  mysql-data:  # MySQL 볼륨
-  redis-data:  # Redis 볼륨
+  mysql-test-data:  # MySQL 볼륨
+  redis-test-data:  # Redis 볼륨
