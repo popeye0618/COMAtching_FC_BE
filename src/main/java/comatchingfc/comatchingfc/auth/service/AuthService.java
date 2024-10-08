@@ -1,7 +1,8 @@
 package comatchingfc.comatchingfc.auth.service;
 
 import comatchingfc.comatchingfc.auth.TokenUtil;
-import comatchingfc.comatchingfc.auth.dto.UserLoginReq;
+import comatchingfc.comatchingfc.auth.dto.Res.UserLoginRes;
+import comatchingfc.comatchingfc.auth.dto.req.UserLoginReq;
 import comatchingfc.comatchingfc.auth.enums.TicketType;
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;
 import comatchingfc.comatchingfc.exception.BusinessException;
@@ -11,6 +12,8 @@ import comatchingfc.comatchingfc.user.entity.Users;
 import comatchingfc.comatchingfc.user.repository.UserAiInfoRepository;
 import comatchingfc.comatchingfc.user.repository.UserFeatureRepository;
 import comatchingfc.comatchingfc.user.repository.UserRepository;
+import comatchingfc.comatchingfc.utils.rabbitMQ.AuthRabbitMQUtil;
+import comatchingfc.comatchingfc.utils.rabbitMQ.Message.res.ReserveAuthResMsg;
 import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,16 +29,23 @@ public class AuthService {
     private final UserRepository userRepository;
     private final UserAiInfoRepository userAiInfoRepository;
     private final UserFeatureRepository userFeatureRepository;
+    private final AuthRabbitMQUtil authRabbitMQUtil;
     private final TokenUtil tokenUtil;
 
     @Transactional
-    public TokenRes userLogin(UserLoginReq userLoginReq) {
+    public UserLoginRes userLogin(UserLoginReq userLoginReq) {
         String type = userLoginReq.getType();
         TicketType ticketType = type.equals(TicketType.online.toString()) ? TicketType.online : TicketType.offline;
 
         if (ticketType.equals(TicketType.online)) {
             // todo: 인증서버에서 예매 번호 확인
         }
+
+        ReserveAuthResMsg reserveAuthResMsg = authRabbitMQUtil.checkReserveNumber(userLoginReq.getTicket());
+        if(!reserveAuthResMsg.isAuthSuccess()){
+            throw new BusinessException(ResponseCode.INVALID_TICKET);
+        }
+
 
         Optional<Users> userOpt = userRepository.findByIdentifyKey(userLoginReq.getTicket());
         String userUuid;
@@ -71,6 +81,8 @@ public class AuthService {
             userRole = user.getRole().toString();
         }
 
-        return tokenUtil.makeTokenRes(userUuid, userRole);
+        TokenRes tokenRes =tokenUtil.makeTokenRes(userUuid, userRole);
+
+        return new UserLoginRes(reserveAuthResMsg.getTeamSide(), tokenRes);
     }
 }

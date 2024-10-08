@@ -1,6 +1,7 @@
 package comatchingfc.comatchingfc.auth.controller;
 
-import comatchingfc.comatchingfc.auth.dto.UserLoginReq;
+import comatchingfc.comatchingfc.auth.dto.Res.UserLoginRes;
+import comatchingfc.comatchingfc.auth.dto.req.UserLoginReq;
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;
 import comatchingfc.comatchingfc.auth.service.AuthService;
 import comatchingfc.comatchingfc.utils.response.Response;
@@ -20,14 +21,16 @@ public class AuthController {
     private final SecurityUtil securityUtil;
 
     @PostMapping("/user/login")
-    public Response<Void> userLogin(@RequestBody @Valid UserLoginReq userLoginReq, HttpServletResponse response) {
+    public Response<UserLoginRes> userLogin(@RequestBody @Valid UserLoginReq userLoginReq, HttpServletResponse response) {
 
-        TokenRes tokenRes = authService.userLogin(userLoginReq);
+
+        UserLoginRes userLoginRes = authService.userLogin(userLoginReq);
+        TokenRes tokenRes = userLoginRes.getTokenRes();
 
         // 쿠키에 토큰 저장
         response.addHeader("Set-Cookie", securityUtil.setAccessResponseCookie(tokenRes.getAccessToken()).toString());
         response.addHeader("Set-Cookie", securityUtil.setRefreshResponseCookie(tokenRes.getRefreshToken()).toString());
 
-        return Response.ok();
+        return Response.ok(userLoginRes);
     }
 }
