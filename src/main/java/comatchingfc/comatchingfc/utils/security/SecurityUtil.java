@@ -21,6 +21,17 @@ public class SecurityUtil {
     private final UserRepository userRepository;
     private final AdminRepository adminRepository;
 
+    public String getRole() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUser customUser) {
+            String role = customUser.getRole();
+
+            return role;
+        }
+        throw new BusinessException(ResponseCode.USER_NOT_FOUND);
+    }
+
     /**
      * 현재 인증된 일반 사용자 정보를 반환
      *

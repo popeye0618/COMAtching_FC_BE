@@ -33,9 +33,6 @@ public class Users extends BaseEntity {
     private String cheeringPlayer;
 
     @Enumerated(EnumType.STRING)
-    private CheerPropensityEnum cheerPropensity;
-
-    @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.ROLE_PENDING;
 
     private Boolean deactivated = false;
@@ -65,10 +62,6 @@ public class Users extends BaseEntity {
 
     public void updateCheeringPlayer(String cheeringPlayer) {
         this.cheeringPlayer = cheeringPlayer;
-    }
-
-    public void updateCheerPropensity(CheerPropensityEnum cheerPropensity) {
-        this.cheerPropensity = cheerPropensity;
     }
 
     public void updateRoleToUser() {

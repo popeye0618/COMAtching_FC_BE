@@ -74,4 +74,8 @@ public class UserFeature extends BaseEntity {
     public void updateAge(int age) {
         this.age = age;
     }
+
+    public void updateCheerPropensity(CheerPropensityEnum cheerPropensityEnum) {
+        this.cheerPropensityEnum = cheerPropensityEnum;
+    }
 }

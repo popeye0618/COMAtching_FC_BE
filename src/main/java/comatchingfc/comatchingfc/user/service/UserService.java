@@ -4,6 +4,7 @@ import comatchingfc.comatchingfc.auth.jwt.refresh.service.RefreshTokenRedisServi
 import comatchingfc.comatchingfc.user.dto.FeatureReq;
 import comatchingfc.comatchingfc.user.entity.Users;
 import comatchingfc.comatchingfc.user.enums.Gender;
+import comatchingfc.comatchingfc.user.repository.UserRepository;
 import comatchingfc.comatchingfc.utils.security.SecurityUtil;
 import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,11 @@ public class UserService {
 
     private final SecurityUtil securityUtil;
     private final RefreshTokenRedisService refreshTokenRedisService;
+    private final UserRepository userRepository;
+
+    public Long getParticipations() {
+        return userRepository.count();
+    }
 
     @Transactional
     public void updateFeature(FeatureReq featureReq) {

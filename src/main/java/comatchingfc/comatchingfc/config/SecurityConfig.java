@@ -31,7 +31,7 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
 
     private static final String[] CORS_WHITELIST = {
-            "http://localhost:5500"
+            "http://localhost:5173"
     };
 
     @Bean
@@ -57,10 +57,11 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/test/match/**", "/auth/refresh", "/admin/register", "/admin/login", "/admin/check/**", "/user/login").permitAll()
+                        .requestMatchers("/test/match/**", "/auth/refresh", "/admin/register", "/admin/login", "/admin/check/**", "/user/login", "/api/participations").permitAll()
                         .requestMatchers("/auth/admin/**").hasRole("ADMIN")
                         .requestMatchers("/auth/pending/**").hasRole("PENDING")
                         .requestMatchers("/auth/user/**").hasRole("USER")
+                        .requestMatchers("/check-role").hasAnyRole("ADMIN", "PENDING", "USER")
                         .anyRequest().authenticated()
                 );
 
@@ -73,7 +74,7 @@ public class SecurityConfig {
 
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(CORS_WHITELIST));
+        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.singletonList("*"));

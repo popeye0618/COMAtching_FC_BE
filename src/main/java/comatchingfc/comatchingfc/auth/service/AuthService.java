@@ -33,18 +33,18 @@ public class AuthService {
     private final TokenUtil tokenUtil;
 
     @Transactional
-    public UserLoginRes userLogin(UserLoginReq userLoginReq) {
+    public TokenRes userLogin(UserLoginReq userLoginReq) {
         String type = userLoginReq.getType();
         TicketType ticketType = type.equals(TicketType.online.toString()) ? TicketType.online : TicketType.offline;
 
-        if (ticketType.equals(TicketType.online)) {
-            // todo: 인증서버에서 예매 번호 확인
+        if (ticketType.equals(TicketType.offline)) {
+            throw new BusinessException(ResponseCode.BAD_REQUEST);
         }
 
-        ReserveAuthResMsg reserveAuthResMsg = authRabbitMQUtil.checkReserveNumber(userLoginReq.getTicket());
-        if(!reserveAuthResMsg.isAuthSuccess()){
-            throw new BusinessException(ResponseCode.INVALID_TICKET);
-        }
+//        ReserveAuthResMsg reserveAuthResMsg = authRabbitMQUtil.checkReserveNumber(userLoginReq.getTicket());
+//        if(!reserveAuthResMsg.isAuthSuccess()){
+//            throw new BusinessException(ResponseCode.INVALID_TICKET);
+//        }
 
 
         Optional<Users> userOpt = userRepository.findByIdentifyKey(userLoginReq.getTicket());
@@ -81,8 +81,9 @@ public class AuthService {
             userRole = user.getRole().toString();
         }
 
-        TokenRes tokenRes =tokenUtil.makeTokenRes(userUuid, userRole);
+        TokenRes tokenRes = tokenUtil.makeTokenRes(userUuid, userRole);
 
-        return new UserLoginRes(reserveAuthResMsg.getTeamSide(), tokenRes);
+//        return new UserLoginRes(reserveAuthResMsg.getTeamSide(), tokenRes);
+        return tokenRes;
     }
 }
