@@ -1,6 +1,8 @@
 package comatchingfc.comatchingfc.user.controller;
 
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;
+import comatchingfc.comatchingfc.player.dto.PlayerRes;
+import comatchingfc.comatchingfc.user.dto.SavePropensityRes;
 import comatchingfc.comatchingfc.user.dto.SurveyResult;
 import comatchingfc.comatchingfc.user.dto.FeatureReq;
 import comatchingfc.comatchingfc.user.service.CheerPropensityService;
@@ -12,8 +14,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -21,11 +24,16 @@ public class UserController {
     private final CheerPropensityService cheerPropensityService;
     private final SecurityUtil securityUtil;
 
+    @GetMapping("/api/participations")
+    public Response<Long> getParticipations() {
+        return Response.ok(userService.getParticipations());
+    }
+
     /**
      * 유저 정보 입력
      * @param featureReq 유저 정보
      */
-    @PostMapping("/pending/feature")
+    @PostMapping("/auth/pending/feature")
     public Response<Void> inputFeature(@RequestBody @Valid FeatureReq featureReq) {
         userService.updateFeature(featureReq);
         return Response.ok();
@@ -36,14 +44,15 @@ public class UserController {
      * @param surveyResult 설문 결과
      * @param response Role이 바뀐 토큰 제공
      */
-    @PostMapping("/pending/survey")
-    public Response<Void> saveCheerPropensity(@RequestBody SurveyResult surveyResult, HttpServletResponse response) {
-        TokenRes tokenRes = cheerPropensityService.saveCheerPropensity(surveyResult);
+    @PostMapping("/auth/pending/survey")
+    public Response<List<PlayerRes>> saveCheerPropensity(@RequestBody SurveyResult surveyResult, HttpServletResponse response) {
+        SavePropensityRes savePropensityRes = cheerPropensityService.saveCheerPropensity(surveyResult);
 
+        TokenRes tokenRes = savePropensityRes.getTokenRes();
         response.addHeader("Set-Cookie", securityUtil.setAccessResponseCookie(tokenRes.getAccessToken()).toString());
         response.addHeader("Set-Cookie", securityUtil.setRefreshResponseCookie(tokenRes.getRefreshToken()).toString());
 
-        return Response.ok();
+        return Response.ok(savePropensityRes.getPlayers());
     }
 
     /**
@@ -51,7 +60,7 @@ public class UserController {
      * @param featureReq 수정된 유저 정보
      */
 
-    @PatchMapping("/user/feature")
+    @PatchMapping("/auth/user/feature")
     public Response<Void> updateUserFeature(@RequestBody @Valid FeatureReq featureReq) {
         userService.updateFeature(featureReq);
         return Response.ok();
@@ -60,7 +69,7 @@ public class UserController {
     /**
      * 유저 탈퇴 (비활성화)
      */
-    @GetMapping("/user/quit")
+    @GetMapping("/auth/user/quit")
     public Response<Void> deactivateUser(HttpServletResponse response) {
         userService.deactivateUser();
 

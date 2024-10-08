@@ -32,7 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
             "/auth/refresh",
             "/admin/register",
             "/admin/login",
-            "user/login",
+            "/user/login",
             "/test/match"
     );
 

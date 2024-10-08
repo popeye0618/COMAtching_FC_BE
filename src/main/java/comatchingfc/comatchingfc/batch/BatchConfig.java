@@ -39,7 +39,7 @@ public class BatchConfig {
     }
 
     // 스케줄링 설정: 매일 00시 30분에 배치 실행
-    @Scheduled(cron = "0 30 0 * * ?")
+    @Scheduled(cron = "0 30 0 * * ?", zone = "Asia/Seoul")
     public void performDeleteAllUsersJob() throws Exception {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("time", System.currentTimeMillis())
