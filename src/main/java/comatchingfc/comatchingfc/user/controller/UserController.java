@@ -2,6 +2,7 @@ package comatchingfc.comatchingfc.user.controller;
 
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;
 import comatchingfc.comatchingfc.player.dto.PlayerRes;
+import comatchingfc.comatchingfc.user.dto.PropensityRes;
 import comatchingfc.comatchingfc.user.dto.SavePropensityRes;
 import comatchingfc.comatchingfc.user.dto.SurveyResult;
 import comatchingfc.comatchingfc.user.dto.FeatureReq;
@@ -45,14 +46,14 @@ public class UserController {
      * @param response Role이 바뀐 토큰 제공
      */
     @PostMapping("/auth/pending/survey")
-    public Response<List<PlayerRes>> saveCheerPropensity(@RequestBody SurveyResult surveyResult, HttpServletResponse response) {
+    public Response<PropensityRes> saveCheerPropensity(@RequestBody SurveyResult surveyResult, HttpServletResponse response) {
         SavePropensityRes savePropensityRes = cheerPropensityService.saveCheerPropensity(surveyResult);
 
         TokenRes tokenRes = savePropensityRes.getTokenRes();
-        response.addHeader("Set-Cookie", securityUtil.setAccessResponseCookie(tokenRes.getAccessToken()).toString());
-        response.addHeader("Set-Cookie", securityUtil.setRefreshResponseCookie(tokenRes.getRefreshToken()).toString());
+        response.addHeader("Authorization", "Bearer " + tokenRes.getAccessToken());
+        response.addHeader("Refresh-Token", tokenRes.getRefreshToken());
 
-        return Response.ok(savePropensityRes.getPlayers());
+        return Response.ok(savePropensityRes.getPropensityRes());
     }
 
     /**

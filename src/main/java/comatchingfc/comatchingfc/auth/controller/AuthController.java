@@ -31,9 +31,8 @@ public class AuthController {
 //        TokenRes tokenRes = userLoginRes.getTokenRes();
         TokenRes tokenRes = authService.userLogin(userLoginReq);
 
-        // 쿠키에 토큰 저장
-        response.addHeader("Set-Cookie", securityUtil.setAccessResponseCookie(tokenRes.getAccessToken()).toString());
-        response.addHeader("Set-Cookie", securityUtil.setRefreshResponseCookie(tokenRes.getRefreshToken()).toString());
+        response.addHeader("Authorization", "Bearer " + tokenRes.getAccessToken());
+        response.addHeader("Refresh-Token", tokenRes.getRefreshToken());
 
 //        return Response.ok(userLoginRes);
         return Response.ok();

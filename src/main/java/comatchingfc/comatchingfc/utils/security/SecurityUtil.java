@@ -85,7 +85,7 @@ public class SecurityUtil {
                 .secure(false)
                 .path("/auth/refresh")
                 .maxAge(24 * 60 * 60) // 1일
-                .sameSite("Strict")
+                .sameSite("Lax")
                 .build();
         return refreshCookie;
     }
@@ -96,7 +96,7 @@ public class SecurityUtil {
                 .secure(false) // HTTPS 환경에서만 전송하려면 true
                 .path("/")
                 .maxAge(60 * 60) // 1시간
-                .sameSite("Strict")
+                .sameSite("Lax")
                 .build();
         return accessCookie;
     }
@@ -107,7 +107,7 @@ public class SecurityUtil {
                 .secure(false)
                 .path("/")
                 .maxAge(0) // 쿠키 삭제
-                .sameSite("Strict")
+                .sameSite("Lax")
                 .build();
     }
 
@@ -117,7 +117,7 @@ public class SecurityUtil {
                 .secure(false)
                 .path("/auth/refresh")
                 .maxAge(0) // 쿠키 삭제
-                .sameSite("Strict")
+                .sameSite("Lax")
                 .build();
     }
 

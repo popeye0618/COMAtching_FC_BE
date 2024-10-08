@@ -35,14 +35,8 @@ public class AdminController {
     public Response<Void> adminLogin(@RequestBody @Valid AdminLoginReq loginReq, HttpServletResponse response) {
         TokenRes tokenRes = adminService.adminLogin(loginReq);
 
-        // Access Token을 HttpOnly 쿠키에 설정
-        ResponseCookie accessCookie = securityUtil.setAccessResponseCookie(tokenRes.getAccessToken());
-
-        // Refresh Token을 HttpOnly 쿠키에 설정
-        ResponseCookie refreshCookie = securityUtil.setRefreshResponseCookie(tokenRes.getRefreshToken());
-
-        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+        response.addHeader("Authorization", "Bearer " + tokenRes.getAccessToken());
+        response.addHeader("Refresh-Token", tokenRes.getRefreshToken());
 
         return Response.ok();
     }

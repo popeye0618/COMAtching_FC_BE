@@ -48,7 +48,8 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String accessToken = getTokenFromCookies(request, "accessToken");
+        setSecurityHeaders(response);
+        String accessToken = getAccessToken(request);
 
         try {
             if (accessToken != null && !jwtUtil.isExpired(accessToken)) {
@@ -94,5 +95,23 @@ public class JwtFilter extends OncePerRequestFilter {
                 .findFirst()
                 .map(Cookie::getValue)
                 .orElse(null);
+    }
+
+    private String getAccessToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+//            log.info("엑세스 토큰 출력 = {}", bearerToken.substring(7));
+            return bearerToken.substring(7);
+        }
+
+        return null;
+    }
+
+    private void setSecurityHeaders(HttpServletResponse response) {
+        response.setHeader("X-Content-Type-Options", "nosniff"); //브라우저가 MIME 타입을 스니핑하지 못하도록 설정
+        response.setHeader("X-Frame-Options", "DENY"); //페이지가 iframe 또는 프레임에 삽입되지 않도록 설정하여 Clickjacking 공격을 방지
+        response.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains"); //모든 연결이 HTTPS를 통해 이루어지도록 강제
+        response.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' https://trusted-cdn.com");
     }
 }

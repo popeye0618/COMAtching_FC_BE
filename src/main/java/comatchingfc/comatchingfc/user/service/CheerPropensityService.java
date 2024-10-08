@@ -4,6 +4,7 @@ import comatchingfc.comatchingfc.auth.TokenUtil;
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;
 import comatchingfc.comatchingfc.player.dto.PlayerRes;
 import comatchingfc.comatchingfc.player.service.PlayerService;
+import comatchingfc.comatchingfc.user.dto.PropensityRes;
 import comatchingfc.comatchingfc.user.dto.SavePropensityRes;
 import comatchingfc.comatchingfc.user.dto.SurveyResult;
 import comatchingfc.comatchingfc.user.entity.CheerPropensity;
@@ -74,8 +75,8 @@ public class CheerPropensityService {
 
         TokenRes tokenRes = tokenUtil.makeTokenRes(userUuid, userRole);
         List<PlayerRes> samePropensityPlayers = playerService.getSamePropensityPlayers(type);
-
-        return new SavePropensityRes(type.getValue(), samePropensityPlayers, tokenRes);
+        PropensityRes propensityRes = new PropensityRes(type.getValue(), samePropensityPlayers);
+        return new SavePropensityRes(propensityRes, tokenRes);
     }
 
     private CheerPropensity buildCheerPropensities(CheerPropensityEnum cheerPropensityEnum, int score) {

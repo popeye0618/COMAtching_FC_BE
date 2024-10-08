@@ -26,11 +26,7 @@ public class RefreshTokenController {
 
     @PostMapping("/auth/refresh")
     public Response<?> refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
-        String refreshToken = Arrays.stream(request.getCookies())
-                .filter(cookie -> "refreshToken".equals(cookie.getName()))
-                .findFirst()
-                .map(Cookie::getValue)
-                .orElse(null);
+        String refreshToken = request.getHeader("Refresh-Token");
 
         if (refreshToken == null) {
             Response.errorResponse(ResponseCode.JWT_ERROR);
@@ -60,14 +56,8 @@ public class RefreshTokenController {
 
             refreshTokenRedisService.saveRefreshToken(uuid, newRefreshToken);
 
-            // Access Token을 HttpOnly 쿠키에 설정
-            ResponseCookie accessCookie = securityUtil.setAccessResponseCookie(newAccessToken);
-
-            // Refresh Token을 HttpOnly 쿠키에 설정
-            ResponseCookie refreshCookie = securityUtil.setRefreshResponseCookie(newRefreshToken);
-
-            response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-            response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+            response.addHeader("Authorization", "Bearer " + newAccessToken);
+            response.addHeader("Refresh-Token", newRefreshToken);
 
             return Response.ok();
         } catch (Exception e) {

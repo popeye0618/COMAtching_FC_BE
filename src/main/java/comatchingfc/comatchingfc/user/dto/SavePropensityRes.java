@@ -12,9 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SavePropensityRes {
 
-    private String cheerPropensity;
-
-    private List<PlayerRes> players;
+    private PropensityRes propensityRes;
 
     @JsonIgnore
     private TokenRes tokenRes;
