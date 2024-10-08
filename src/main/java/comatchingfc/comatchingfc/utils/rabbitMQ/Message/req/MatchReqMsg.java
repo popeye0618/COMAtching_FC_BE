@@ -85,7 +85,7 @@ public class MatchReqMsg {
 			return objectMapper.writeValueAsString(this);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
-			return null; // 직렬화 실패 시 null을 반환하거나 예외를 처리할 수 있습니다.
+			return null;
 		}
 	}
 }

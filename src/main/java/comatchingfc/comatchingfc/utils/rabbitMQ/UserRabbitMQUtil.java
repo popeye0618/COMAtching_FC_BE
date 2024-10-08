@@ -11,7 +11,9 @@ import org.springframework.stereotype.Component;
 
 import comatchingfc.comatchingfc.exception.BusinessException;
 import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.MatchReqMsg;
+import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.UserCrudReqMsg;
 import comatchingfc.comatchingfc.utils.rabbitMQ.Message.res.MatchResMsg;
+import comatchingfc.comatchingfc.utils.rabbitMQ.Message.res.UserCrudResMsg;
 import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserRabbitMQUtil {
 	private final RabbitTemplate rabbitTemplate;
 
-	@Value("${rabbitmq.routing-keys.match-request}")
+	@Value("${rabbitmq.routing-keys.user-crud-request}")
 	private String matchRequestQueue;
 
 	public UserRabbitMQUtil(RabbitTemplate rabbitTemplate){
@@ -32,13 +34,13 @@ public class UserRabbitMQUtil {
 	 * @param requestMsg : 매칭 요청 Dto
 	 * @return 매칭 결과
 	 */
-	public MatchResMsg requestUserToCsv(MatchReqMsg requestMsg){
+	public UserCrudResMsg requestUserToCsv(UserCrudReqMsg requestMsg){
 		String requestId = UUID.randomUUID().toString();
 		CorrelationData correlationData = new CorrelationData(requestId);
-		ParameterizedTypeReference<MatchResMsg> responseType = new ParameterizedTypeReference<MatchResMsg>(){};
+		ParameterizedTypeReference<UserCrudResMsg> responseType = new ParameterizedTypeReference<UserCrudResMsg>(){};
 
-		log.info("[MatchingRabbitMQUtil requestMatch] request={}", requestMsg.toJsonString());
-		MatchResMsg responseMsg =  rabbitTemplate.convertSendAndReceiveAsType(
+		log.info("[UserRabbitMQUtil requestUserToCsv] request={}", requestMsg.toJsonString());
+		UserCrudResMsg responseMsg =  rabbitTemplate.convertSendAndReceiveAsType(
 			matchRequestQueue,
 			requestMsg,
 			(MessagePostProcessor) null,
@@ -49,7 +51,6 @@ public class UserRabbitMQUtil {
 			throw new BusinessException(ResponseCode.MATCH_GENERAL_FAIL);
 		}
 
-		log.info("[MatchingRabbitMQUtil requestMatch] stateCode = {} / responseMsg.getEnemyUuid={} ", responseMsg.getStateCode(), responseMsg.getEnemyUuid());
 		return responseMsg;
 	}
 }

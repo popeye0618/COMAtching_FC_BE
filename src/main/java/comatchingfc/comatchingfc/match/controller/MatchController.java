@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import comatchingfc.comatchingfc.match.dto.req.AuthReq;
 import comatchingfc.comatchingfc.match.dto.req.MatchReq;
 import comatchingfc.comatchingfc.match.service.MatchService;
+import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.UserCrudReqMsg;
 import comatchingfc.comatchingfc.utils.response.Response;
 import lombok.RequiredArgsConstructor;
 
@@ -27,5 +28,12 @@ public class MatchController {
 
 		return matchService.requestMatch(req);
 	}
+
+	@PostMapping("/test/match/request")
+	public Response requestMatch(@RequestBody UserCrudReqMsg req){
+
+		return matchService.requestUserCrud(req);
+	}
+
 
 }
