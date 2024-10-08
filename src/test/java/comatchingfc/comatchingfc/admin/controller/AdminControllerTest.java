@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc
 class AdminControllerTest {
 
     @Autowired
@@ -82,11 +82,13 @@ class AdminControllerTest {
         when(adminService.isAccountDuplicated(accountId)).thenReturn(false);
 
         //when & then
-        mockMvc.perform(get("/admin/check-duplicate/{accountId}", accountId)
+        mockMvc.perform(get("/admin/check/{accountId}", accountId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()) // 응답 상태가 200 OK인지 검증
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON)) // 응답 본문 타입이 JSON인지 검증
-                .andExpect(content().string("true")); // 중복되지 않은 ID이므로 true 반환
+                .andExpect(jsonPath("$.status").value(200)) // status 필드 검증
+                .andExpect(jsonPath("$.code").value("GEN-000")) // code 필드 검증
+                .andExpect(jsonPath("$.data").value(true)); // data 필드 검증
 
         //verify
         verify(adminService, times(1)).isAccountDuplicated(accountId);
@@ -102,11 +104,13 @@ class AdminControllerTest {
         when(adminService.isAccountDuplicated(accountId)).thenReturn(true);
 
         //when & then
-        mockMvc.perform(get("/admin/check-duplicate/{accountId}", accountId)
+        mockMvc.perform(get("/admin/check/{accountId}", accountId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()) // 응답 상태가 200 OK인지 검증
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON)) // 응답 본문 타입이 JSON인지 검증
-                .andExpect(content().string("false")); // 중복된 ID이므로 false 반환
+                .andExpect(jsonPath("$.status").value(200)) // status 필드 검증
+                .andExpect(jsonPath("$.code").value("GEN-000")) // code 필드 검증
+                .andExpect(jsonPath("$.data").value(false)); // data 필드 검증
 
         //verify
         verify(adminService, times(1)).isAccountDuplicated(accountId);
