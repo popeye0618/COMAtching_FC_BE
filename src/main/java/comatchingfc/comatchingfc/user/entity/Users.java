@@ -1,5 +1,6 @@
 package comatchingfc.comatchingfc.user.entity;
 
+import comatchingfc.comatchingfc.match.entity.MatchingHistory;
 import comatchingfc.comatchingfc.user.enums.CheerPropensityEnum;
 import comatchingfc.comatchingfc.user.enums.UserRole;
 import comatchingfc.comatchingfc.utils.BaseEntity;
@@ -23,6 +24,10 @@ public class Users extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_ai_info_id", unique = true)
     private UserAiInfo userAiInfo;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "matching_history_id")
+    private MatchingHistory matchingHistory;
 
     private String identifyKey;
 
@@ -75,4 +80,6 @@ public class Users extends BaseEntity {
     public void activateUser() {
         this.deactivated = false;
     }
+
+    public void addMatchingHistory(MatchingHistory matchingHistory){ this.matchingHistory = matchingHistory; }
 }
