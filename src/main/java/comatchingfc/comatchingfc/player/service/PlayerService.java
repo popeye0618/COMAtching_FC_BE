@@ -1,10 +1,13 @@
 package comatchingfc.comatchingfc.player.service;
 
+import comatchingfc.comatchingfc.player.dto.PlayerInfoReq;
 import comatchingfc.comatchingfc.player.dto.PlayerRes;
+import comatchingfc.comatchingfc.player.entity.Player;
 import comatchingfc.comatchingfc.player.repository.PlayerRepository;
 import comatchingfc.comatchingfc.user.enums.CheerPropensityEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,5 +25,17 @@ public class PlayerService {
                         .backNumber(player.getBackNumber())
                         .position(player.getPosition())
                         .build()).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void addPlayer(PlayerInfoReq playerInfoReq) {
+        Player player = Player.builder()
+                .name(playerInfoReq.getName())
+                .backNumber(playerInfoReq.getBackNumber())
+                .position(playerInfoReq.getPosition())
+                .cheerPropensityEnum(CheerPropensityEnum.from(playerInfoReq.getCheerPropensity()))
+                .build();
+
+        playerRepository.save(player);
     }
 }
