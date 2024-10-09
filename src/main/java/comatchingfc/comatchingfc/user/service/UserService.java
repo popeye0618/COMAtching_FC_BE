@@ -2,6 +2,8 @@ package comatchingfc.comatchingfc.user.service;
 
 import comatchingfc.comatchingfc.auth.jwt.refresh.service.RefreshTokenRedisService;
 import comatchingfc.comatchingfc.user.dto.FeatureReq;
+import comatchingfc.comatchingfc.user.dto.UserInfo;
+import comatchingfc.comatchingfc.user.entity.UserFeature;
 import comatchingfc.comatchingfc.user.entity.Users;
 import comatchingfc.comatchingfc.user.enums.Gender;
 import comatchingfc.comatchingfc.user.repository.UserRepository;
@@ -34,6 +36,20 @@ public class UserService {
         user.getUserAiInfo().getUserFeature().updateGender(gender);
         user.updateSocialId(featureReq.getSocialId());
         user.updateCheeringPlayer(featureReq.getCheeringPlayer());
+    }
+
+    public UserInfo getUserInfo() {
+        Users user = securityUtil.getCurrentUserEntity();
+        UserFeature userFeature = user.getUserAiInfo().getUserFeature();
+
+        return UserInfo.builder()
+                .username(user.getUsername())
+                .age(userFeature.getAge())
+                .gender(userFeature.getGender())
+                .socialId(user.getSocialId())
+                .cheeringPlayer(user.getCheeringPlayer())
+                .cheerPropensity(userFeature.getCheerPropensityEnum())
+                .build();
     }
 
     /**

@@ -1,8 +1,6 @@
 package comatchingfc.comatchingfc.auth.controller;
 
-import comatchingfc.comatchingfc.auth.dto.Res.UserLoginRes;
 import comatchingfc.comatchingfc.auth.dto.req.UserLoginReq;
-import comatchingfc.comatchingfc.auth.jwt.JwtUtil;
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;
 import comatchingfc.comatchingfc.auth.service.AuthService;
 import comatchingfc.comatchingfc.utils.response.Response;
@@ -10,6 +8,8 @@ import comatchingfc.comatchingfc.utils.security.SecurityUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +21,6 @@ public class AuthController {
 
     private final AuthService authService;
     private final SecurityUtil securityUtil;
-    private final JwtUtil jwtUtil;
 
     @PostMapping("/user/login")
     public Response<Void> userLogin(@RequestBody @Valid UserLoginReq userLoginReq, HttpServletResponse response) {
@@ -31,9 +30,11 @@ public class AuthController {
 //        TokenRes tokenRes = userLoginRes.getTokenRes();
         TokenRes tokenRes = authService.userLogin(userLoginReq);
 
-        // 쿠키에 토큰 저장
-        response.addHeader("Set-Cookie", securityUtil.setAccessResponseCookie(tokenRes.getAccessToken()).toString());
-        response.addHeader("Set-Cookie", securityUtil.setRefreshResponseCookie(tokenRes.getRefreshToken()).toString());
+        ResponseCookie accessCookie = securityUtil.setAccessResponseCookie(tokenRes.getAccessToken());
+        ResponseCookie refreshCookie = securityUtil.setRefreshResponseCookie(tokenRes.getRefreshToken());
+
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
 //        return Response.ok(userLoginRes);
         return Response.ok();
