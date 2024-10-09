@@ -8,8 +8,8 @@ build/
 ### for build and deploy ###
 /my.cnf
 /.env
-!**/Dockerfile
-!**/docker-compose.yml
+**/Dockerfile
+**/docker-compose.yml
 
 
 ### STS ###
