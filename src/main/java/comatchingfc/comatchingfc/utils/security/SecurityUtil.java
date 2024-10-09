@@ -2,7 +2,8 @@ package comatchingfc.comatchingfc.utils.security;
 
 import comatchingfc.comatchingfc.admin.entity.Admin;
 import comatchingfc.comatchingfc.admin.repository.AdminRepository;
-import comatchingfc.comatchingfc.auth.jwt.dto.CustomUser;
+import comatchingfc.comatchingfc.auth.jwt.dto.admin.CustomAdmin;
+import comatchingfc.comatchingfc.auth.jwt.dto.user.CustomUser;
 import comatchingfc.comatchingfc.exception.BusinessException;
 import comatchingfc.comatchingfc.user.entity.Users;
 import comatchingfc.comatchingfc.user.repository.UserRepository;
@@ -24,10 +25,12 @@ public class SecurityUtil {
     public String getRole() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUser customUser) {
-            String role = customUser.getRole();
-
-            return role;
+        if (authentication != null) {
+            if (authentication.getPrincipal() instanceof CustomUser customUser) {
+                return customUser.getRole();
+            } else if (authentication.getPrincipal() instanceof CustomAdmin customAdmin) {
+                return customAdmin.getRole();
+            }
         }
         throw new BusinessException(ResponseCode.USER_NOT_FOUND);
     }
@@ -42,11 +45,6 @@ public class SecurityUtil {
 
         if (authentication != null && authentication.getPrincipal() instanceof CustomUser customUser) {
             String uuid = customUser.getUuid();
-            String role = customUser.getRole();
-
-            if ("ROLE_ADMIN".equals(role)) {
-                throw new BusinessException(ResponseCode.ACCESS_DENIED);
-            }
 
             return userRepository.findUsersByUuid(UUIDUtil.uuidStringToBytes(uuid))
                     .orElseThrow(() -> new BusinessException(ResponseCode.USER_NOT_FOUND));
@@ -63,13 +61,8 @@ public class SecurityUtil {
     public Admin getCurrentAdminEntity() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUser customUser) {
-            String uuid = customUser.getUuid();
-            String role = customUser.getRole();
-
-            if (!"ROLE_ADMIN".equals(role)) {
-                throw new BusinessException(ResponseCode.ACCESS_DENIED);
-            }
+        if (authentication != null && authentication.getPrincipal() instanceof CustomAdmin customAdmin) {
+            String uuid = customAdmin.getUuid();
 
             return adminRepository.findByUuid(UUIDUtil.uuidStringToBytes(uuid))
                     .orElseThrow(() -> new BusinessException(ResponseCode.USER_NOT_FOUND));
@@ -84,6 +77,7 @@ public class SecurityUtil {
                 .httpOnly(true)
                 .secure(false)
                 .path("/auth/refresh")
+//                .domain(".comatching.site")
                 .maxAge(24 * 60 * 60) // 1일
                 .sameSite("Strict")
                 .build();
@@ -95,6 +89,7 @@ public class SecurityUtil {
                 .httpOnly(true)
                 .secure(false) // HTTPS 환경에서만 전송하려면 true
                 .path("/")
+//                .domain(".comatching.site")
                 .maxAge(60 * 60) // 1시간
                 .sameSite("Strict")
                 .build();
@@ -106,6 +101,7 @@ public class SecurityUtil {
                 .httpOnly(true)
                 .secure(false)
                 .path("/")
+//                .domain(".comatching.site")
                 .maxAge(0) // 쿠키 삭제
                 .sameSite("Strict")
                 .build();
@@ -115,6 +111,7 @@ public class SecurityUtil {
         return ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
                 .secure(false)
+//                .domain(".comatching.site")
                 .path("/auth/refresh")
                 .maxAge(0) // 쿠키 삭제
                 .sameSite("Strict")

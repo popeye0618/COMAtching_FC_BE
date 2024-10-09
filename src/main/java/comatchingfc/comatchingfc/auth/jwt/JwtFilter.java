@@ -1,7 +1,9 @@
 package comatchingfc.comatchingfc.auth.jwt;
 
-import comatchingfc.comatchingfc.auth.jwt.dto.CustomUser;
-import comatchingfc.comatchingfc.auth.jwt.dto.UserDto;
+import comatchingfc.comatchingfc.auth.jwt.dto.admin.AdminDto;
+import comatchingfc.comatchingfc.auth.jwt.dto.admin.CustomAdmin;
+import comatchingfc.comatchingfc.auth.jwt.dto.user.CustomUser;
+import comatchingfc.comatchingfc.auth.jwt.dto.user.UserDto;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -15,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
             if (accessToken != null && !jwtUtil.isExpired(accessToken)) {
-                log.info("엑세스 토큰 유효");
+//                log.info("엑세스 토큰 유효");
                 setAuthentication(accessToken);
                 filterChain.doFilter(request, response);
                 return;
@@ -75,13 +76,24 @@ public class JwtFilter extends OncePerRequestFilter {
         String uuid = jwtUtil.getUUID(accessToken);
         String role = jwtUtil.getRole(accessToken);
 
-        UserDto userDto = new UserDto();
-        userDto.setUuid(uuid);
-        userDto.setRole(role);
+        if (role.equals("ROLE_ADMIN")) {
+            AdminDto adminDto = AdminDto.builder()
+                    .uuid(uuid)
+                    .role(role)
+                    .build();
 
-        CustomUser customUser = new CustomUser(userDto);
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customUser, null, customUser.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authToken);
+            CustomAdmin adminUser = new CustomAdmin(adminDto);
+            Authentication authToken = new UsernamePasswordAuthenticationToken(adminUser, null, adminUser.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+        } else {
+            UserDto userDto = new UserDto();
+            userDto.setUuid(uuid);
+            userDto.setRole(role);
+
+            CustomUser customUser = new CustomUser(userDto);
+            Authentication authToken = new UsernamePasswordAuthenticationToken(customUser, null, customUser.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+        }
     }
 
     private String getTokenFromCookies(HttpServletRequest request, String cookieName) {

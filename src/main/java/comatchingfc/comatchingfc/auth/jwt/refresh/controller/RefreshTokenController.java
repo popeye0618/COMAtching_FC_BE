@@ -60,14 +60,8 @@ public class RefreshTokenController {
 
             refreshTokenRedisService.saveRefreshToken(uuid, newRefreshToken);
 
-            // Access Token을 HttpOnly 쿠키에 설정
-            ResponseCookie accessCookie = securityUtil.setAccessResponseCookie(newAccessToken);
-
-            // Refresh Token을 HttpOnly 쿠키에 설정
-            ResponseCookie refreshCookie = securityUtil.setRefreshResponseCookie(newRefreshToken);
-
-            response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-            response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+            response.addHeader("Set-Cookie", "accessToken=" + securityUtil.setAccessResponseCookie(newAccessToken).toString() + "; SameSite=None; Secure");
+            response.addHeader("Set-Cookie", "refreshToken=" + securityUtil.setRefreshResponseCookie(newRefreshToken).toString() + "; SameSite=None; Secure" );
 
             return Response.ok();
         } catch (Exception e) {
