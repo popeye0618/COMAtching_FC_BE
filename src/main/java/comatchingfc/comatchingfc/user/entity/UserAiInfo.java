@@ -25,6 +25,10 @@ public class UserAiInfo extends BaseEntity {
     @Column(columnDefinition = "BINARY(16)")
     private byte[] uuid;
 
+    private boolean isPicked = false;
+
+    private boolean isPick = false;
+
 
     @Builder
     public UserAiInfo(byte[] uuid) {

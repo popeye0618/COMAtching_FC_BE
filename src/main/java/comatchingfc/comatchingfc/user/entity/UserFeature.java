@@ -35,7 +35,7 @@ public class UserFeature extends BaseEntity {
     private int age;
 
     @Enumerated(EnumType.STRING)
-    private CheerPropensityEnum cheerPropensityEnum;
+    private CheerPropensityEnum propensity;
 
     @Enumerated(EnumType.STRING)
     private TeamSide teamSide;
@@ -75,7 +75,7 @@ public class UserFeature extends BaseEntity {
         this.age = age;
     }
 
-    public void updateCheerPropensity(CheerPropensityEnum cheerPropensityEnum) {
-        this.cheerPropensityEnum = cheerPropensityEnum;
+    public void updateCheerPropensity(CheerPropensityEnum propensity) {
+        this.propensity = propensity;
     }
 }
