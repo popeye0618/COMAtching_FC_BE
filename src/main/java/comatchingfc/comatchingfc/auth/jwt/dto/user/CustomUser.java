@@ -1,4 +1,4 @@
-package comatchingfc.comatchingfc.auth.jwt.dto;
+package comatchingfc.comatchingfc.auth.jwt.dto.user;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,7 +30,7 @@ public class CustomUser implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return "";
     }
 
     @Override
