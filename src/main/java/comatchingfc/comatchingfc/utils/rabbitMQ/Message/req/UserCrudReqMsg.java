@@ -17,7 +17,7 @@ public class UserCrudReqMsg {
 	private String uuid;
 	private Gender gender;
 	private int age;
-	private CheerPropensityEnum cheerPropensityEnum;
+	private CheerPropensityEnum propensity;
 	private int propensity1;
 	private int propensity2;
 	private int propensity3;

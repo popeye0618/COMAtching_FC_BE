@@ -34,10 +34,10 @@ public class UserFeature extends BaseEntity {
 
     private int age;
 
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private CheerPropensityEnum cheerPropensityEnum;
 
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private TeamSide teamSide;
 
     @Builder
