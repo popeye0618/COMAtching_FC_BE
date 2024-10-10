@@ -1,9 +1,11 @@
 package comatchingfc.comatchingfc.match.service;
 
 import static comatchingfc.comatchingfc.user.enums.Gender.*;
+import static comatchingfc.comatchingfc.user.enums.UserCrudType.*;
 
 import java.util.List;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,12 +20,15 @@ import comatchingfc.comatchingfc.user.entity.UserFeature;
 import comatchingfc.comatchingfc.user.entity.Users;
 import comatchingfc.comatchingfc.user.enums.CheerPropensityEnum;
 import comatchingfc.comatchingfc.user.enums.Gender;
+import comatchingfc.comatchingfc.user.enums.UserCrudType;
 import comatchingfc.comatchingfc.user.repository.UserAiInfoRepository;
 import comatchingfc.comatchingfc.user.repository.UserFeatureRepository;
 import comatchingfc.comatchingfc.user.repository.UserRepository;
 import comatchingfc.comatchingfc.utils.rabbitMQ.MatchingRabbitMQUtil;
 import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.MatchReqMsg;
+import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.UserCrudReqMsg;
 import comatchingfc.comatchingfc.utils.rabbitMQ.Message.res.MatchResMsg;
+import comatchingfc.comatchingfc.utils.rabbitMQ.UserRabbitMQUtil;
 import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import comatchingfc.comatchingfc.utils.security.SecurityUtil;
 import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
@@ -35,8 +40,9 @@ public class MatchService {
 	private final UserRepository userRepository;
 	private final UserFeatureRepository userFeatureRepository;
 	private final UserAiInfoRepository userAiInfoRepository;
-	private final MatchingRabbitMQUtil matchingRabbitMQUtil;
 	private final MatchingHistoryRepository matchingHistoryRepository;
+	private final MatchingRabbitMQUtil matchingRabbitMQUtil;
+	private final UserRabbitMQUtil userRabbitMQUtil;
 	private final SecurityUtil securityUtil;
 
 	/**
@@ -61,6 +67,10 @@ public class MatchService {
 
 		Users enemy = enemyAiInfo.getUsers();
 		UserFeature enemyFeature = enemyAiInfo.getUserFeature();
+		List<CheerPropensity> enemyCheerPropensities = enemyFeature.getCheerPropensities();
+
+		UserCrudReqMsg userCrudReqMsg = new UserCrudReqMsg(enemyFeature, enemyCheerPropensities, enemyAiInfo);
+		userRabbitMQUtil.requestUserToCsv(userCrudReqMsg, DELETE);
 
 		MatchingHistory matchingHistory = MatchingHistory.builder()
 			.applier(applier)
