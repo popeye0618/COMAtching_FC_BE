@@ -48,7 +48,7 @@ public class MatchReqMsg {
 					this.myPropensity1 = cheerPropensity.getScore();
 				case 집중형:
 					this.myPropensity2 = cheerPropensity.getScore();
-				case 축알못형:
+				case 축린이형:
 					this.myPropensity3 = cheerPropensity.getScore();
 				case 축잘알형:
 					this.myPropensity4 = cheerPropensity.getScore();

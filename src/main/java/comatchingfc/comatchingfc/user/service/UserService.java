@@ -64,4 +64,11 @@ public class UserService {
         String userUuid = UUIDUtil.bytesToHex(user.getUserAiInfo().getUuid());
         refreshTokenRedisService.deleteRefreshToken(userUuid);
     }
+
+    @Transactional
+    public void logout() {
+        Users user = securityUtil.getCurrentUserEntity();
+        String userUuid = UUIDUtil.bytesToHex(user.getUserAiInfo().getUuid());
+        refreshTokenRedisService.deleteRefreshToken(userUuid);
+    }
 }

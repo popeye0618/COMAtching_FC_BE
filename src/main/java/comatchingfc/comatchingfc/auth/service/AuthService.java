@@ -9,11 +9,11 @@ import comatchingfc.comatchingfc.exception.BusinessException;
 import comatchingfc.comatchingfc.user.entity.UserAiInfo;
 import comatchingfc.comatchingfc.user.entity.UserFeature;
 import comatchingfc.comatchingfc.user.entity.Users;
+import comatchingfc.comatchingfc.user.enums.TeamSide;
 import comatchingfc.comatchingfc.user.repository.UserAiInfoRepository;
 import comatchingfc.comatchingfc.user.repository.UserFeatureRepository;
 import comatchingfc.comatchingfc.user.repository.UserRepository;
 import comatchingfc.comatchingfc.utils.rabbitMQ.AuthRabbitMQUtil;
-import comatchingfc.comatchingfc.utils.rabbitMQ.Message.res.ReserveAuthResMsg;
 import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class AuthService {
     private final TokenUtil tokenUtil;
 
     @Transactional
-    public TokenRes userLogin(UserLoginReq userLoginReq) {
+    public UserLoginRes userLogin(UserLoginReq userLoginReq) {
         String type = userLoginReq.getType();
         TicketType ticketType = type.equals(TicketType.online.toString()) ? TicketType.online : TicketType.offline;
 
@@ -84,6 +84,6 @@ public class AuthService {
         TokenRes tokenRes = tokenUtil.makeTokenRes(userUuid, userRole);
 
 //        return new UserLoginRes(reserveAuthResMsg.getTeamSide(), tokenRes);
-        return tokenRes;
+        return new UserLoginRes(TeamSide.HOME, userRole, tokenRes);
     }
 }

@@ -49,14 +49,19 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String accessToken = getTokenFromCookies(request, "accessToken");
+        String encryptedToken = getTokenFromCookies(request, "accessToken");
 
         try {
-            if (accessToken != null && !jwtUtil.isExpired(accessToken)) {
-//                log.info("엑세스 토큰 유효");
-                setAuthentication(accessToken);
-                filterChain.doFilter(request, response);
-                return;
+            if (encryptedToken != null) {
+                // 토큰 복호화
+                String accessToken = jwtUtil.decryptToken(encryptedToken);
+
+                if (!jwtUtil.isExpired(accessToken)) {
+                    // 복호화된 토큰 유효성 검증
+                    setAuthentication(accessToken);
+                    filterChain.doFilter(request, response);
+                    return;
+                }
             }
         } catch (ExpiredJwtException e) {
             log.info("엑세스 토큰 만료");
