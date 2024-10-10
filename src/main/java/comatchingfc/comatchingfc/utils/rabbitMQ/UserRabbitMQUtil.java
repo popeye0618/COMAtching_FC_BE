@@ -47,6 +47,7 @@ public class UserRabbitMQUtil {
 			correlationData,
 			responseType);
 
+		log.info("[UserRabbitMQUtil requestUserToCsv] response={}", responseMsg.toJsonString());
 		if(responseMsg == null){
 			throw new BusinessException(ResponseCode.MATCH_GENERAL_FAIL);
 		}
