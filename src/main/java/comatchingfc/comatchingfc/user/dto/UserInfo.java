@@ -16,4 +16,10 @@ public class UserInfo {
     private int age;
     private Gender gender;
     private CheerPropensityEnum cheerPropensity;
+    private int passionType;
+    private int focusType;
+    private int soccerNoviceType;
+    private int soccerExpertType;
+    private int mukbangType;
+    private int socialType;
 }
