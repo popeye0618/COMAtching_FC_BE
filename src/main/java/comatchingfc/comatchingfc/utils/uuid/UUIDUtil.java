@@ -36,4 +36,31 @@ public class UUIDUtil {
         }
         return new String(hexChars).toLowerCase();
     }
+
+    public static String bytesToStringLiteral(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++) {
+            sb.append(String.format("%02x", bytes[i])); // 바이트 값을 16진수 소문자로 변환
+
+            // UUID 포맷에 따라 특정 위치에 "-" 추가
+            if (i == 3 || i == 5 || i == 7 || i == 9) {
+                sb.append("-");
+            }
+        }
+        return sb.toString();
+    }
+
+    public static byte[] stringToByteLiteral(String string) {
+        // "-"를 제거한 후 "0x"가 없는 16진수 문자열만 남김
+        string = string.replace("-", "");
+
+        int len = string.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) Integer.parseInt(string.substring(i, i + 2), 16); // 16진수로 변환하여 바이트로 저장
+        }
+        return data;
+    }
+
+
 }

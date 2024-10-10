@@ -13,11 +13,9 @@ import comatchingfc.comatchingfc.user.enums.Gender;
 import comatchingfc.comatchingfc.user.enums.TeamSide;
 import comatchingfc.comatchingfc.user.enums.UserCrudType;
 import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class UserCrudReqMsg {
 	private UserCrudType type;
 	private String uuid;
@@ -53,7 +51,7 @@ public class UserCrudReqMsg {
 					this.propensity1 = cheerPropensity.getScore();
 				case 집중형:
 					this.propensity2 = cheerPropensity.getScore();
-				case 축알못형:
+				case 축린이형:
 					this.propensity3 = cheerPropensity.getScore();
 				case 축잘알형:
 					this.propensity4 = cheerPropensity.getScore();

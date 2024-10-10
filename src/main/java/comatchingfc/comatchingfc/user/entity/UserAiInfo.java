@@ -48,4 +48,12 @@ public class UserAiInfo extends BaseEntity {
             userFeature.setUserAiInfo(this);
         }
     }
+
+    public void updateIsPick(boolean isPick){
+        this.isPick = isPick;
+    }
+
+    public void updateIsPicked(boolean isPicked){
+        this.isPicked = isPicked;
+    }
 }

@@ -14,6 +14,7 @@ import comatchingfc.comatchingfc.user.repository.UserAiInfoRepository;
 import comatchingfc.comatchingfc.user.repository.UserFeatureRepository;
 import comatchingfc.comatchingfc.user.repository.UserRepository;
 import comatchingfc.comatchingfc.utils.rabbitMQ.AuthRabbitMQUtil;
+import comatchingfc.comatchingfc.utils.rabbitMQ.Message.res.ReserveAuthResMsg;
 import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
 import lombok.RequiredArgsConstructor;
@@ -41,11 +42,10 @@ public class AuthService {
             throw new BusinessException(ResponseCode.BAD_REQUEST);
         }
 
-//        ReserveAuthResMsg reserveAuthResMsg = authRabbitMQUtil.checkReserveNumber(userLoginReq.getTicket());
-//        if(!reserveAuthResMsg.isAuthSuccess()){
-//            throw new BusinessException(ResponseCode.INVALID_TICKET);
-//        }
-
+        ReserveAuthResMsg reserveAuthResMsg = authRabbitMQUtil.checkReserveNumber(userLoginReq.getTicket());
+        if(!reserveAuthResMsg.isAuthSuccess()){
+            throw new BusinessException(ResponseCode.INVALID_TICKET);
+        }
 
         Optional<Users> userOpt = userRepository.findByIdentifyKey(userLoginReq.getTicket());
         String userUuid;

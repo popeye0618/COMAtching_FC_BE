@@ -10,6 +10,7 @@ build/
 /.env
 /Dockerfile
 /docker-compose.yml
+/src/main/resources/data.sql
 
 ### STS ###
 .apt_generated
