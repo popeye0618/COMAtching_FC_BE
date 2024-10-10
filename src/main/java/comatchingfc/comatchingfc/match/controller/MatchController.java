@@ -23,17 +23,17 @@ public class MatchController {
 		return matchService.requestAuth(req);
 	}
 
-	@PostMapping("/test/match/request")
-	public Response requestMatch(@RequestBody MatchReq req){
-
-		return matchService.requestMatch(req);
-	}
-
-	@PostMapping("/test/match/request")
-	public Response requestMatch(@RequestBody UserCrudReqMsg req){
-
-		return matchService.requestUserCrud(req);
-	}
+//	@PostMapping("/test/match/request")
+//	public Response requestMatch(@RequestBody MatchReq req){
+//
+//		return matchService.requestMatch(req);
+//	}
+//
+//	@PostMapping("/test/match/request")
+//	public Response requestMatch(@RequestBody UserCrudReqMsg req){
+//
+//		return matchService.requestUserCrud(req);
+//	}
 
 
 }
