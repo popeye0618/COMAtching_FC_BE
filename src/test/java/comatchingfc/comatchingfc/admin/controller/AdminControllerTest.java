@@ -148,8 +148,8 @@ class AdminControllerTest {
                 .sameSite("Strict")
                 .build();
 
-        when(securityUtil.setAccessResponseCookie("accessToken123")).thenReturn(accessCookie);
-        when(securityUtil.setRefreshResponseCookie("refreshToken123")).thenReturn(refreshCookie);
+//        when(securityUtil.setAccessResponseCookie("accessToken123")).thenReturn(accessCookie);
+//        when(securityUtil.setRefreshResponseCookie("refreshToken123")).thenReturn(refreshCookie);
 
         //when & then
         mockMvc.perform(post("/admin/login")
