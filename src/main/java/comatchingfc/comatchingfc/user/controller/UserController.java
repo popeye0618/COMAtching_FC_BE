@@ -90,4 +90,13 @@ public class UserController {
 
         return Response.ok();
     }
+
+    @GetMapping("/auth/user/logout")
+    public Response<Void> logoutUser(HttpServletResponse response) {
+
+        response.addHeader("Set-Cookie", securityUtil.deleteAccessResponseCookie().toString());
+        response.addHeader("Set-Cookie", securityUtil.deleteRefreshResponseCookie().toString());
+
+        return Response.ok();
+    }
 }
