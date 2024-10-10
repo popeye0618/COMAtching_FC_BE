@@ -26,21 +26,23 @@ public class RefreshTokenController {
 
     @PostMapping("/auth/refresh")
     public Response<?> refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
-        String refreshToken = Arrays.stream(request.getCookies())
+        String encryptedRefreshToken = Arrays.stream(request.getCookies())
                 .filter(cookie -> "refreshToken".equals(cookie.getName()))
                 .findFirst()
                 .map(Cookie::getValue)
                 .orElse(null);
 
-        if (refreshToken == null) {
-            Response.errorResponse(ResponseCode.JWT_ERROR);
+        if (encryptedRefreshToken == null) {
+            return Response.errorResponse(ResponseCode.JWT_ERROR);
         }
 
         try {
+            String refreshToken = jwtUtil.decryptToken(encryptedRefreshToken);
             String uuid = jwtUtil.getUUID(refreshToken);
             String role = jwtUtil.getRole(refreshToken);
 
-            String storedRefreshToken = refreshTokenRedisService.getRefreshToken(uuid);
+            String storeEncryptRefreshToken = refreshTokenRedisService.getRefreshToken(uuid);
+            String storedRefreshToken = jwtUtil.decryptToken(storeEncryptRefreshToken);
 
             if (storedRefreshToken == null) {
                 return Response.errorResponse(ResponseCode.JWT_ERROR);

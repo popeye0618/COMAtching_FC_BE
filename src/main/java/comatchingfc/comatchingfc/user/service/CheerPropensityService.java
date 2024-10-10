@@ -47,7 +47,7 @@ public class CheerPropensityService {
         focusType.setUserFeature(userFeature);
         cheerPropensities.add(focusType);
 
-        CheerPropensity soccerNoviceType = buildCheerPropensities(CheerPropensityEnum.축알못형, surveyResult.getSoccerNoviceType());
+        CheerPropensity soccerNoviceType = buildCheerPropensities(CheerPropensityEnum.축린이형, surveyResult.getSoccerNoviceType());
         soccerNoviceType.setUserFeature(userFeature);
         cheerPropensities.add(soccerNoviceType);
 
