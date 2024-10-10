@@ -1,5 +1,6 @@
 package comatchingfc.comatchingfc.auth.controller;
 
+import comatchingfc.comatchingfc.auth.dto.Res.UserLoginRes;
 import comatchingfc.comatchingfc.auth.dto.req.UserLoginReq;
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;
 import comatchingfc.comatchingfc.auth.service.AuthService;
@@ -23,12 +24,11 @@ public class AuthController {
     private final SecurityUtil securityUtil;
 
     @PostMapping("/user/login")
-    public Response<Void> userLogin(@RequestBody @Valid UserLoginReq userLoginReq, HttpServletResponse response) {
+    public Response<String> userLogin(@RequestBody @Valid UserLoginReq userLoginReq, HttpServletResponse response) {
 
 
-//        UserLoginRes userLoginRes = authService.userLogin(userLoginReq);
-//        TokenRes tokenRes = userLoginRes.getTokenRes();
-        TokenRes tokenRes = authService.userLogin(userLoginReq);
+        UserLoginRes userLoginRes = authService.userLogin(userLoginReq);
+        TokenRes tokenRes = userLoginRes.getTokenRes();
 
         ResponseCookie accessCookie = securityUtil.setAccessResponseCookie(tokenRes.getAccessToken());
         ResponseCookie refreshCookie = securityUtil.setRefreshResponseCookie(tokenRes.getRefreshToken());
@@ -37,7 +37,7 @@ public class AuthController {
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
 //        return Response.ok(userLoginRes);
-        return Response.ok();
+        return Response.ok(userLoginRes.getRole());
     }
 
     @GetMapping("/check-role")
