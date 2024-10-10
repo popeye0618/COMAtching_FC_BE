@@ -9,7 +9,7 @@ import lombok.Getter;
 public enum Gender {
     MALE("MALE"),
     FEMALE("FEMALE"),
-    NONE("NONE");       // none is for matching option
+    RANDOM("RANDOM");       // none is for matching option
 
     private final String value;
 
