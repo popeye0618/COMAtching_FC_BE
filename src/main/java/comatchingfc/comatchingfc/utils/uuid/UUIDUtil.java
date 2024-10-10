@@ -51,7 +51,6 @@ public class UUIDUtil {
     }
 
     public static byte[] stringToByteLiteral(String string) {
-        // "-"를 제거한 후 "0x"가 없는 16진수 문자열만 남김
         string = string.replace("-", "");
 
         int len = string.length();
