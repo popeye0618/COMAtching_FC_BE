@@ -29,11 +29,11 @@ public class MatchingHistory extends BaseEntity {
 	private Long id;
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "users_id")
+	@JoinColumn(name = "applier_id")
 	private Users applier;
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "users_id")
+	@JoinColumn(name = "enemy_id")
 	private Users enemy;
 
 	@Builder

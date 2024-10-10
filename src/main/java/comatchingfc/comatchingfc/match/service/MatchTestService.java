@@ -42,7 +42,7 @@ public class MatchTestService {
 
 	public Response requestUserCrud(UserCrudReqMsg req){
 
-		userRabbitMQUtil.requestUserToCsv(req);
+ 		userRabbitMQUtil.requestUserToCsv(req, req.getType());
 
 		return Response.ok();
 	}

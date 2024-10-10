@@ -1,6 +1,7 @@
 package comatchingfc.comatchingfc.user.repository;
 
 import comatchingfc.comatchingfc.user.entity.UserFeature;
+import comatchingfc.comatchingfc.user.enums.CheerPropensityEnum;
 import comatchingfc.comatchingfc.user.enums.Gender;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,7 +21,7 @@ public interface UserFeatureRepository extends JpaRepository<UserFeature, Long> 
 		"AND uf.age BETWEEN :age - 5 AND :age + 5")
 	long countMatchableUserByGenderAndPropensityAndAge(
 		@Param("gender") String gender,
-		@Param("propensity") String propensity,
+		@Param("propensity") CheerPropensityEnum propensity,
 		@Param("age") int age);
 
 
@@ -31,7 +32,7 @@ public interface UserFeatureRepository extends JpaRepository<UserFeature, Long> 
 		"AND uf.age > 19 " +
 		"AND uf.age BETWEEN :age - 5 AND :age + 5")
 	long countMatchableUserAndPropensityAndAge(
-		@Param("propensity") String propensity,
+		@Param("propensity") CheerPropensityEnum propensity,
 		@Param("age") int age);
 
 }

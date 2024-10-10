@@ -48,7 +48,7 @@ public class UserService {
                 .gender(userFeature.getGender())
                 .socialId(user.getSocialId())
                 .cheeringPlayer(user.getCheeringPlayer())
-                .cheerPropensity(userFeature.getCheerPropensityEnum())
+                .cheerPropensity(userFeature.getPropensity())
                 .build();
     }
 

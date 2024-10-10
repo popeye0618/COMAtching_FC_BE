@@ -10,6 +10,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 
 import comatchingfc.comatchingfc.exception.BusinessException;
+ import comatchingfc.comatchingfc.user.enums.UserCrudType;
 import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.MatchReqMsg;
 import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.UserCrudReqMsg;
 import comatchingfc.comatchingfc.utils.rabbitMQ.Message.res.MatchResMsg;
@@ -34,7 +35,8 @@ public class UserRabbitMQUtil {
 	 * @param requestMsg : 매칭 요청 Dto
 	 * @return 매칭 결과
 	 */
-	public UserCrudResMsg requestUserToCsv(UserCrudReqMsg requestMsg){
+	public UserCrudResMsg requestUserToCsv(UserCrudReqMsg requestMsg, UserCrudType userCrudType){
+		requestMsg.addType(userCrudType);
 		String requestId = UUID.randomUUID().toString();
 		CorrelationData correlationData = new CorrelationData(requestId);
 		ParameterizedTypeReference<UserCrudResMsg> responseType = new ParameterizedTypeReference<UserCrudResMsg>(){};

@@ -1,6 +1,7 @@
 package comatchingfc.comatchingfc.match.service;
 
 import static comatchingfc.comatchingfc.user.enums.Gender.*;
+import static comatchingfc.comatchingfc.user.enums.UserCrudType.*;
 
 import java.util.List;
 
@@ -23,20 +24,25 @@ import comatchingfc.comatchingfc.user.repository.UserFeatureRepository;
 import comatchingfc.comatchingfc.user.repository.UserRepository;
 import comatchingfc.comatchingfc.utils.rabbitMQ.MatchingRabbitMQUtil;
 import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.MatchReqMsg;
+import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.UserCrudReqMsg;
 import comatchingfc.comatchingfc.utils.rabbitMQ.Message.res.MatchResMsg;
+import comatchingfc.comatchingfc.utils.rabbitMQ.UserRabbitMQUtil;
 import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import comatchingfc.comatchingfc.utils.security.SecurityUtil;
 import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MatchService {
 	private final UserRepository userRepository;
 	private final UserFeatureRepository userFeatureRepository;
 	private final UserAiInfoRepository userAiInfoRepository;
-	private final MatchingRabbitMQUtil matchingRabbitMQUtil;
 	private final MatchingHistoryRepository matchingHistoryRepository;
+	private final MatchingRabbitMQUtil matchingRabbitMQUtil;
+	private final UserRabbitMQUtil userRabbitMQUtil;
 	private final SecurityUtil securityUtil;
 
 	/**
@@ -46,21 +52,38 @@ public class MatchService {
 	 */
 	@Transactional
 	public MatchRes requestMatch(MatchReq matchReq){
+		log.info("1");
 		Users applier = securityUtil.getCurrentUserEntity();
+		log.info("2");
 		UserAiInfo applierAiInfo = applier.getUserAiInfo();
+		log.info("3");
 		UserFeature applierFeature = applierAiInfo.getUserFeature();
+		log.info("4");
 		List<CheerPropensity> applierCheerPropensities = applierFeature.getCheerPropensities();
+		log.info("5");
 
 		boolean lackOfResource = checkLackOfResource(matchReq.getGenderOption(), applierFeature.getAge(), applierFeature.getPropensity());
+		log.info("6");
 
-		MatchReqMsg matchReqMsg = new MatchReqMsg(applierFeature, applierAiInfo, applierCheerPropensities);
+
+		MatchReqMsg matchReqMsg = new MatchReqMsg(applierFeature, applierAiInfo, applierCheerPropensities, matchReq.getGenderOption());
+		log.info("[7 MatchService matchRequest] - applierUuid = {}", matchReqMsg.getMatcherUuid());
 		MatchResMsg matchResMsg = matchingRabbitMQUtil.requestMatch(matchReqMsg);
 
-		UserAiInfo enemyAiInfo = userAiInfoRepository.findByUuid(UUIDUtil.uuidStringToBytes(matchResMsg.getEnemyUuid()))
+		log.info("8");
+		UserAiInfo enemyAiInfo = userAiInfoRepository.findByUuid(UUIDUtil.stringToByteLiteral(matchResMsg.getEnemyUuid()))
 			.orElseThrow(() -> new BusinessException(ResponseCode.ENEMY_NOT_FOUND));
+		log.info("9");
 
 		Users enemy = enemyAiInfo.getUsers();
 		UserFeature enemyFeature = enemyAiInfo.getUserFeature();
+		List<CheerPropensity> enemyCheerPropensities = enemyFeature.getCheerPropensities();
+
+		UserCrudReqMsg userCrudReqMsg = new UserCrudReqMsg(enemyFeature, enemyCheerPropensities, enemyAiInfo);
+		userRabbitMQUtil.requestUserToCsv(userCrudReqMsg, DELETE);
+
+		applierAiInfo.updateIsPick(true);
+		enemyAiInfo.updateIsPicked(true);
 
 		MatchingHistory matchingHistory = MatchingHistory.builder()
 			.applier(applier)
@@ -81,15 +104,23 @@ public class MatchService {
 	}
 
 	private boolean checkLackOfResource(Gender genderOption, int age, CheerPropensityEnum propensityOption){
+		log.info("5-1");
 		long count = 0;
-		if(genderOption.equals(NONE)){
-			count = userFeatureRepository.countMatchableUserAndPropensityAndAge(propensityOption.getValue(), age);
+		log.info("5-2");
+		if(genderOption.equals(RANDOM)){
+			log.info("5-3");
+			count = userFeatureRepository.countMatchableUserAndPropensityAndAge(propensityOption, age);
+			log.info("[MatchService - checkLackOfResource] : count={}", count);
+			log.info("5-4");
 		}
 		else{
+			log.info("5-5");
 			count = userFeatureRepository.countMatchableUserByGenderAndPropensityAndAge(genderOption.getValue(),
-				propensityOption.getValue(), age);
+				propensityOption, age);
+			log.info("[MatchService - checkLackOfResource] : count={}", count);
+			log.info("5-6");
 		}
-
+		log.info("5-7");
 		return (count == 0)? true : false;
 	}
 }

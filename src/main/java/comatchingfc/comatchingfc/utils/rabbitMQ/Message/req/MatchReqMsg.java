@@ -9,6 +9,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import comatchingfc.comatchingfc.user.enums.CheerPropensityEnum;
 import comatchingfc.comatchingfc.user.enums.Gender;
 import comatchingfc.comatchingfc.user.enums.TeamSide;
 import comatchingfc.comatchingfc.user.entity.CheerPropensity;
@@ -18,15 +19,17 @@ import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Builder
 @Getter
+@Slf4j
 @AllArgsConstructor
 public class MatchReqMsg {
 	private String matcherUuid;
 	private Gender myGender;
 	private int myAge;
-	private String myPropensity;
+	private CheerPropensityEnum myPropensity;
 	private Integer myPropensity1;
 	private Integer myPropensity2;
 	private Integer myPropensity3;
@@ -37,28 +40,40 @@ public class MatchReqMsg {
 	private TeamSide teamOption;
 
 
-	public MatchReqMsg(UserFeature userFeature, UserAiInfo userAiInfo, List<CheerPropensity> cheerPropensities){
-		this.matcherUuid = UUIDUtil.bytesToHex(userAiInfo.getUuid());
+	public MatchReqMsg(UserFeature userFeature, UserAiInfo userAiInfo, List<CheerPropensity> cheerPropensities, Gender genderOption){
+		this.matcherUuid = UUIDUtil.bytesToStringLiteral(userAiInfo.getUuid());
 		this.myGender = userFeature.getGender();
 		this.myAge = userFeature.getAge();
+		this.myPropensity = userFeature.getPropensity();
 
 		for(CheerPropensity cheerPropensity : cheerPropensities){
-			switch(cheerPropensity.getCheerPropensityEnum()){
-				case 열정형:
+			switch(cheerPropensity.getCheerPropensityEnum().getValue()){
+				case "열정형":
 					this.myPropensity1 = cheerPropensity.getScore();
-				case 집중형:
+					break;
+
+				case "집중형":
 					this.myPropensity2 = cheerPropensity.getScore();
-				case 축린이형:
+					break;
+
+				case "축린이형":
 					this.myPropensity3 = cheerPropensity.getScore();
-				case 축잘알형:
+					break;
+
+				case "축잘알형":
 					this.myPropensity4 = cheerPropensity.getScore();
-				case 먹방형:
+					break;
+
+				case "먹방형":
 					this.myPropensity5 = cheerPropensity.getScore();
-				case 인싸형:
+					break;
+
+				case "인싸형":
 					this.myPropensity6 = cheerPropensity.getScore();
+					break;
 			}
 		}
-
+		this.genderOption = genderOption;
 		this.teamOption = userFeature.getTeamSide();
 	}
 
@@ -67,7 +82,7 @@ public class MatchReqMsg {
 			.matcherUuid(uuid)
 			.myGender(FEMALE)
 			.myAge(24)
-			.myPropensity(인싸형.getValue())
+			.myPropensity(인싸형)
 			.myPropensity1(0)
 			.myPropensity2(3)
 			.myPropensity3(1)
