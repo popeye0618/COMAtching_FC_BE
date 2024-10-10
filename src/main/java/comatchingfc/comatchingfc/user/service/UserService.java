@@ -3,6 +3,7 @@ package comatchingfc.comatchingfc.user.service;
 import comatchingfc.comatchingfc.auth.jwt.refresh.service.RefreshTokenRedisService;
 import comatchingfc.comatchingfc.user.dto.FeatureReq;
 import comatchingfc.comatchingfc.user.dto.UserInfo;
+import comatchingfc.comatchingfc.user.entity.CheerPropensity;
 import comatchingfc.comatchingfc.user.entity.UserFeature;
 import comatchingfc.comatchingfc.user.entity.Users;
 import comatchingfc.comatchingfc.user.enums.Gender;
@@ -12,6 +13,8 @@ import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +44,7 @@ public class UserService {
     public UserInfo getUserInfo() {
         Users user = securityUtil.getCurrentUserEntity();
         UserFeature userFeature = user.getUserAiInfo().getUserFeature();
+        List<CheerPropensity> cheerPropensities = userFeature.getCheerPropensities();
 
         return UserInfo.builder()
                 .username(user.getUsername())
@@ -49,6 +53,12 @@ public class UserService {
                 .socialId(user.getSocialId())
                 .cheeringPlayer(user.getCheeringPlayer())
                 .cheerPropensity(userFeature.getPropensity())
+                .passionType(cheerPropensities.get(0).getScore())
+                .focusType(cheerPropensities.get(1).getScore())
+                .soccerNoviceType(cheerPropensities.get(2).getScore())
+                .soccerExpertType(cheerPropensities.get(3).getScore())
+                .mukbangType(cheerPropensities.get(4).getScore())
+                .socialType(cheerPropensities.get(5).getScore())
                 .build();
     }
 
