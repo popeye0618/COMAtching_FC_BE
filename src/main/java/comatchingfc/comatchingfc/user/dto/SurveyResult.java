@@ -42,7 +42,7 @@ public class SurveyResult {
                 return passionType;
             case 집중형:
                 return focusType;
-            case 축알못형:
+정            case 축린이형:
                 return soccerNoviceType;
             case 축잘알형:
                 return soccerExpertType;
