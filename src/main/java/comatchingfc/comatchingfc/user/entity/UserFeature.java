@@ -78,4 +78,8 @@ public class UserFeature extends BaseEntity {
     public void updateCheerPropensity(CheerPropensityEnum propensity) {
         this.propensity = propensity;
     }
+
+    public void setTeamSide(TeamSide teamSide) {
+        this.teamSide = teamSide;
+    }
 }

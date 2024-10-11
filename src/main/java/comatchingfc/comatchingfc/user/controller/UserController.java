@@ -65,15 +65,18 @@ public class UserController {
      * 메인페이지 Get 메소드
      * @return 내 정보, 매칭 상대 정보 (매칭 하지 않았으면 null)
      */
-    // todo: 매칭 여부 판별 + 매칭 된 상대 정보 넣는 로직 추가 필요
     @GetMapping("/auth/user/info")
     public Response<UserInfoRes> getUserInfo() {
         UserInfo myInfo = userService.getUserInfo();
-        //todo : 매칭 했는지 판별 + 매칭된 상대 정보 UserInfo dto에 담기
+        UserInfo enemyUserInfo = null;
+        if (userService.userMatched()) {
+            enemyUserInfo = userService.getEnemyUserInfo();
+
+        }
         // 아래는 매칭은 안한 사람인 경우 상대 정보 null
         UserInfoRes userInfoRes = UserInfoRes.builder()
                 .myInfo(myInfo)
-                .enemyInfo(null)
+                .enemyInfo(enemyUserInfo)
                 .build();
         return Response.ok(userInfoRes);
     }
@@ -93,6 +96,7 @@ public class UserController {
 
     @GetMapping("/auth/user/logout")
     public Response<Void> logoutUser(HttpServletResponse response) {
+        userService.logout();
 
         response.addHeader("Set-Cookie", securityUtil.deleteAccessResponseCookie().toString());
         response.addHeader("Set-Cookie", securityUtil.deleteRefreshResponseCookie().toString());

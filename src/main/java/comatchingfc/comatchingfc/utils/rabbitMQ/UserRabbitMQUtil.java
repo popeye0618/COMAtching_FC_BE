@@ -1,7 +1,12 @@
 package comatchingfc.comatchingfc.utils.rabbitMQ;
 
+import java.util.List;
 import java.util.UUID;
 
+import comatchingfc.comatchingfc.user.entity.CheerPropensity;
+import comatchingfc.comatchingfc.user.entity.UserAiInfo;
+import comatchingfc.comatchingfc.user.entity.UserFeature;
+import comatchingfc.comatchingfc.user.entity.Users;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -54,6 +59,16 @@ public class UserRabbitMQUtil {
 			throw new BusinessException(ResponseCode.MATCH_GENERAL_FAIL);
 		}
 
+		log.info("[MatchingRabbitMQUtil requestMatch] stateCode = {}", responseMsg.getStateCode());
+
 		return responseMsg;
+	}
+
+	public UserCrudReqMsg getUserCrudReqMsg(Users user) {
+		UserAiInfo userAiInfo = user.getUserAiInfo();
+		UserFeature userFeature = user.getUserAiInfo().getUserFeature();
+		List<CheerPropensity> cheerPropensities = userFeature.getCheerPropensities();
+
+		return new UserCrudReqMsg(userFeature, cheerPropensities, userAiInfo);
 	}
 }

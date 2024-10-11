@@ -41,7 +41,7 @@ public class UserCrudReqMsg {
 	}
 
 	public UserCrudReqMsg(UserFeature userFeature, List<CheerPropensity> cheerPropensities, UserAiInfo userAiInfo){
-		this.uuid = UUIDUtil.bytesToHex(userAiInfo.getUuid());
+		this.uuid = UUIDUtil.bytesToStringLiteral(userAiInfo.getUuid());
 		this.gender = userFeature.getGender();
 		this.age = userFeature.getAge();
 	 	this.propensity = userFeature.getPropensity();
