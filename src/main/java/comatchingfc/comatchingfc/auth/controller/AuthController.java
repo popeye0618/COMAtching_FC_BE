@@ -36,7 +36,6 @@ public class AuthController {
         response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
-//        return Response.ok(userLoginRes);
         return Response.ok(userLoginRes.getRole());
     }
 

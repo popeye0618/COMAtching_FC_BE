@@ -11,7 +11,10 @@ import comatchingfc.comatchingfc.user.entity.CheerPropensity;
 import comatchingfc.comatchingfc.user.entity.UserFeature;
 import comatchingfc.comatchingfc.user.entity.Users;
 import comatchingfc.comatchingfc.user.enums.CheerPropensityEnum;
+import comatchingfc.comatchingfc.user.enums.UserCrudType;
 import comatchingfc.comatchingfc.user.repository.CheerPropensityRepository;
+import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.UserCrudReqMsg;
+import comatchingfc.comatchingfc.utils.rabbitMQ.UserRabbitMQUtil;
 import comatchingfc.comatchingfc.utils.security.SecurityUtil;
 import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,7 @@ public class CheerPropensityService {
     private final SecurityUtil securityUtil;
     private final TokenUtil tokenUtil;
     private final PlayerService playerService;
+    private final UserRabbitMQUtil userRabbitMQUtil;
 
     @Transactional
     public SavePropensityRes saveCheerPropensity(SurveyResult surveyResult) {
@@ -80,6 +84,9 @@ public class CheerPropensityService {
                 .cheerPropensity(type.getValue())
                 .players(samePropensityPlayers)
                 .build();
+
+        UserCrudReqMsg userCrudReqMsg = userRabbitMQUtil.getUserCrudReqMsg(user);
+        userRabbitMQUtil.requestUserToCsv(userCrudReqMsg, UserCrudType.CREATE);
 
         return new SavePropensityRes(propensityRes, tokenRes);
     }

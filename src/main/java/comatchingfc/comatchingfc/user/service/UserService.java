@@ -7,7 +7,10 @@ import comatchingfc.comatchingfc.user.entity.CheerPropensity;
 import comatchingfc.comatchingfc.user.entity.UserFeature;
 import comatchingfc.comatchingfc.user.entity.Users;
 import comatchingfc.comatchingfc.user.enums.Gender;
+import comatchingfc.comatchingfc.user.enums.UserCrudType;
 import comatchingfc.comatchingfc.user.repository.UserRepository;
+import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.UserCrudReqMsg;
+import comatchingfc.comatchingfc.utils.rabbitMQ.UserRabbitMQUtil;
 import comatchingfc.comatchingfc.utils.security.SecurityUtil;
 import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,7 @@ public class UserService {
     private final SecurityUtil securityUtil;
     private final RefreshTokenRedisService refreshTokenRedisService;
     private final UserRepository userRepository;
+    private final UserRabbitMQUtil userRabbitMQUtil;
 
     public Long getParticipations() {
         return userRepository.count();
@@ -62,13 +66,42 @@ public class UserService {
                 .build();
     }
 
+    public Boolean userMatched() {
+        Users user = securityUtil.getCurrentUserEntity();
+        return user.getUserAiInfo().isPick();
+    }
+
+    public UserInfo getEnemyUserInfo() {
+        Users user = securityUtil.getCurrentUserEntity();
+        Users enemy = user.getMatchingHistory().getEnemy();
+        UserFeature userFeature = enemy.getUserAiInfo().getUserFeature();
+        List<CheerPropensity> cheerPropensities = userFeature.getCheerPropensities();
+
+        return UserInfo.builder()
+                .username(enemy.getUsername())
+                .age(userFeature.getAge())
+                .gender(userFeature.getGender())
+                .socialId(enemy.getSocialId())
+                .cheeringPlayer(enemy.getCheeringPlayer())
+                .cheerPropensity(userFeature.getPropensity())
+                .passionType(cheerPropensities.get(0).getScore())
+                .focusType(cheerPropensities.get(1).getScore())
+                .soccerNoviceType(cheerPropensities.get(2).getScore())
+                .soccerExpertType(cheerPropensities.get(3).getScore())
+                .mukbangType(cheerPropensities.get(4).getScore())
+                .socialType(cheerPropensities.get(5).getScore())
+                .build();
+    }
+
     /**
      * 유저 비활성화
-     * todo: 매치히스토리DB에서 뽑힌 기록 null 처리 로직 필요
      */
     @Transactional
     public void deactivateUser() {
         Users user = securityUtil.getCurrentUserEntity();
+        UserCrudReqMsg userCrudReqMsg = userRabbitMQUtil.getUserCrudReqMsg(user);
+
+        userRabbitMQUtil.requestUserToCsv(userCrudReqMsg, UserCrudType.DELETE);
         user.deactivateUser();
 
         String userUuid = UUIDUtil.bytesToHex(user.getUserAiInfo().getUuid());

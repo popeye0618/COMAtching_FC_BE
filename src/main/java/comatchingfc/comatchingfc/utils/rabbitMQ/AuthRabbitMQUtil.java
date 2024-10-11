@@ -2,6 +2,8 @@ package comatchingfc.comatchingfc.utils.rabbitMQ;
 
 import java.util.UUID;
 
+import comatchingfc.comatchingfc.exception.BusinessException;
+import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -46,6 +48,11 @@ public class AuthRabbitMQUtil {
 			correlationData,
 			responseType);
 
+		if(responseMsg == null){
+			throw new BusinessException(ResponseCode.MATCH_GENERAL_FAIL);
+		}
+
+		log.info("[MatchingRabbitMQUtil requestMatch] stateCode = {}", responseMsg.getStateCode());
 		return responseMsg;
 	}
 }

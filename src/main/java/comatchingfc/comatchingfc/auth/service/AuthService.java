@@ -64,6 +64,7 @@ public class AuthService {
 
             userAiInfo.setUsers(user);
             userFeature.setUserAiInfo(userAiInfo);
+            userFeature.setTeamSide(reserveAuthResMsg.getTeamSide());
 
             userRepository.save(user);
             userAiInfoRepository.save(userAiInfo);
@@ -83,7 +84,6 @@ public class AuthService {
 
         TokenRes tokenRes = tokenUtil.makeTokenRes(userUuid, userRole);
 
-//        return new UserLoginRes(reserveAuthResMsg.getTeamSide(), tokenRes);
         return new UserLoginRes(TeamSide.HOME, userRole, tokenRes);
     }
 }
