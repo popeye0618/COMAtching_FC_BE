@@ -40,5 +40,8 @@ public class MatchingHistory extends BaseEntity {
 	public MatchingHistory(Users applier, Users enemy, UserFeature userFeature){
 		this.applier = applier;
 		this.enemy = enemy;
+
+		applier.addMatchingHistory(this);
+		enemy.addMatchingHistory(this);
 	}
 }
