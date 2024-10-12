@@ -1,4 +1,4 @@
-package comatchingfc.comatchingfc.user.dto;
+package comatchingfc.comatchingfc.user.dto.res;
 
 import comatchingfc.comatchingfc.player.dto.PlayerRes;
 import lombok.AllArgsConstructor;

@@ -2,6 +2,9 @@ package comatchingfc.comatchingfc.user.controller;
 
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;
 import comatchingfc.comatchingfc.user.dto.*;
+import comatchingfc.comatchingfc.user.dto.req.FeatureReq;
+import comatchingfc.comatchingfc.user.dto.res.PropensityRes;
+import comatchingfc.comatchingfc.user.dto.res.SavePropensityRes;
 import comatchingfc.comatchingfc.user.service.CheerPropensityService;
 import comatchingfc.comatchingfc.user.service.UserService;
 import comatchingfc.comatchingfc.utils.response.Response;

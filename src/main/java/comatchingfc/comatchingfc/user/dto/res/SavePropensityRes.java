@@ -1,4 +1,4 @@
-package comatchingfc.comatchingfc.user.dto;
+package comatchingfc.comatchingfc.user.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;
