@@ -2,7 +2,6 @@ package comatchingfc.comatchingfc.user.entity;
 
 import java.util.List;
 
-import comatchingfc.comatchingfc.admin.entity.UserNoticeCheck;
 import comatchingfc.comatchingfc.match.entity.MatchingHistory;
 import comatchingfc.comatchingfc.user.enums.UserRole;
 import comatchingfc.comatchingfc.utils.BaseEntity;

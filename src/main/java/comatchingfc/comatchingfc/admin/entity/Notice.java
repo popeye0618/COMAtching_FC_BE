@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import comatchingfc.comatchingfc.user.entity.UserNoticeCheck;
 import comatchingfc.comatchingfc.utils.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

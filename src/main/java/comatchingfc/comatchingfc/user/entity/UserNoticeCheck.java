@@ -1,8 +1,9 @@
-package comatchingfc.comatchingfc.admin.entity;
+package comatchingfc.comatchingfc.user.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import comatchingfc.comatchingfc.admin.entity.Notice;
 import comatchingfc.comatchingfc.user.entity.Users;
 import comatchingfc.comatchingfc.utils.BaseEntity;
 import jakarta.persistence.Column;
