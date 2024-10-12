@@ -14,6 +14,7 @@ public enum ResponseCode {
 	//Match response
 	MATCH_GENERAL_FAIL(400, "MAT-001", HttpStatus.INTERNAL_SERVER_ERROR, "Matching process was fail"),
 	ENEMY_NOT_FOUND(400, "MAT-002", HttpStatus.INTERNAL_SERVER_ERROR, "Can't find enemy"),
+	MATCH_ALREADY_EXIST(400, "MAT-003", HttpStatus.INTERNAL_SERVER_ERROR, "Already matched"),
 
 	//Auth response
 	TOKEN_EXPIRED(401, "SEC-001", HttpStatus.UNAUTHORIZED, "Token is expired"),
