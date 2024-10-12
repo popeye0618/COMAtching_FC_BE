@@ -16,6 +16,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -40,4 +41,11 @@ public class Notice extends BaseEntity {
 
 	@OneToMany(mappedBy = "notice")
 	private List<UserNoticeCheck> userNoticeCheckList = new ArrayList<>();
+
+	@Builder
+	public Notice(String body, LocalDate expireDate, Admin admin){
+		this.body = body;
+		this.expireDate = expireDate;
+		this.admin =  admin;
+	}
 }
