@@ -1,5 +1,8 @@
 package comatchingfc.comatchingfc.admin.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,6 +17,9 @@ public class Admin {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "admin_id")
     private Long id;
+
+    @OneToMany(mappedBy = "admin")
+    private List<Notice> noticeList = new ArrayList<>();
 
     @Column(columnDefinition = "BINARY(16)")
     private byte[] uuid;
