@@ -1,8 +1,8 @@
 package comatchingfc.comatchingfc.admin.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import comatchingfc.comatchingfc.admin.dto.AdminLoginReq;
-import comatchingfc.comatchingfc.admin.dto.AdminRegisterReq;
+import comatchingfc.comatchingfc.admin.dto.req.AdminLoginReq;
+import comatchingfc.comatchingfc.admin.dto.req.AdminRegisterReq;
 import comatchingfc.comatchingfc.admin.service.AdminService;
 import comatchingfc.comatchingfc.auth.jwt.JwtUtil;
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;

@@ -1,7 +1,7 @@
 package comatchingfc.comatchingfc.admin.service;
 
-import comatchingfc.comatchingfc.admin.dto.AdminLoginReq;
-import comatchingfc.comatchingfc.admin.dto.AdminRegisterReq;
+import comatchingfc.comatchingfc.admin.dto.req.AdminLoginReq;
+import comatchingfc.comatchingfc.admin.dto.req.AdminRegisterReq;
 import comatchingfc.comatchingfc.admin.entity.Admin;
 import comatchingfc.comatchingfc.admin.repository.AdminRepository;
 import comatchingfc.comatchingfc.auth.jwt.JwtUtil;

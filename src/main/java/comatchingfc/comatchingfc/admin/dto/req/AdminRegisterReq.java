@@ -1,4 +1,4 @@
-package comatchingfc.comatchingfc.admin.dto;
+package comatchingfc.comatchingfc.admin.dto.req;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
