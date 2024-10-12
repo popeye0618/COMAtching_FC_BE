@@ -1,7 +1,9 @@
 package comatchingfc.comatchingfc.user.entity;
 
+import java.util.List;
+
+import comatchingfc.comatchingfc.admin.entity.UserNoticeCheck;
 import comatchingfc.comatchingfc.match.entity.MatchingHistory;
-import comatchingfc.comatchingfc.user.enums.CheerPropensityEnum;
 import comatchingfc.comatchingfc.user.enums.UserRole;
 import comatchingfc.comatchingfc.utils.BaseEntity;
 import jakarta.persistence.*;
@@ -28,6 +30,9 @@ public class Users extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "matching_history_id")
     private MatchingHistory matchingHistory;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserNoticeCheck> userNoticeCheckList;
 
     private String identifyKey;
 
