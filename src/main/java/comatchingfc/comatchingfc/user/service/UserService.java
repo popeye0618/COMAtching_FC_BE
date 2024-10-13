@@ -1,7 +1,7 @@
 package comatchingfc.comatchingfc.user.service;
 
 import comatchingfc.comatchingfc.auth.jwt.refresh.service.RefreshTokenRedisService;
-import comatchingfc.comatchingfc.user.dto.FeatureReq;
+import comatchingfc.comatchingfc.user.dto.req.FeatureReq;
 import comatchingfc.comatchingfc.user.dto.UserInfo;
 import comatchingfc.comatchingfc.user.entity.CheerPropensity;
 import comatchingfc.comatchingfc.user.entity.UserFeature;

@@ -1,4 +1,4 @@
-package comatchingfc.comatchingfc.admin.dto;
+package comatchingfc.comatchingfc.user.dto.req;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AdminRegisterReq {
+public class FeatureReq {
 
     @NotNull
     @NotEmpty
@@ -15,9 +15,15 @@ public class AdminRegisterReq {
 
     @NotNull
     @NotEmpty
-    private String accountId;
+    private String gender;
+
+    private int age;
 
     @NotNull
     @NotEmpty
-    private String password;
+    private String socialId;
+
+    @NotNull
+    @NotEmpty
+    private String cheeringPlayer;
 }

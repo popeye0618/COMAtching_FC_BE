@@ -52,28 +52,23 @@ public class MatchService {
 	 */
 	@Transactional
 	public MatchRes requestMatch(MatchReq matchReq){
-		log.info("1");
 		Users applier = securityUtil.getCurrentUserEntity();
-		log.info("2");
+
+		if(applier.getMatchingHistory() != null){
+			throw new BusinessException(ResponseCode.MATCH_ALREADY_EXIST);
+		}
+
 		UserAiInfo applierAiInfo = applier.getUserAiInfo();
-		log.info("3");
 		UserFeature applierFeature = applierAiInfo.getUserFeature();
-		log.info("4");
 		List<CheerPropensity> applierCheerPropensities = applierFeature.getCheerPropensities();
-		log.info("5");
 
 		boolean lackOfResource = checkLackOfResource(matchReq.getGenderOption(), applierFeature.getAge(), applierFeature.getPropensity());
-		log.info("6");
-
 
 		MatchReqMsg matchReqMsg = new MatchReqMsg(applierFeature, applierAiInfo, applierCheerPropensities, matchReq.getGenderOption());
-		log.info("[7 MatchService matchRequest] - applierUuid = {}", matchReqMsg.getMatcherUuid());
 		MatchResMsg matchResMsg = matchingRabbitMQUtil.requestMatch(matchReqMsg);
 
-		log.info("8");
 		UserAiInfo enemyAiInfo = userAiInfoRepository.findByUuid(UUIDUtil.stringToByteLiteral(matchResMsg.getEnemyUuid()))
 			.orElseThrow(() -> new BusinessException(ResponseCode.ENEMY_NOT_FOUND));
-		log.info("9");
 
 		Users enemy = enemyAiInfo.getUsers();
 		UserFeature enemyFeature = enemyAiInfo.getUserFeature();
@@ -104,23 +99,16 @@ public class MatchService {
 	}
 
 	private boolean checkLackOfResource(Gender genderOption, int age, CheerPropensityEnum propensityOption){
-		log.info("5-1");
 		long count = 0;
-		log.info("5-2");
 		if(genderOption.equals(RANDOM)){
-			log.info("5-3");
 			count = userFeatureRepository.countMatchableUserAndPropensityAndAge(propensityOption, age);
 			log.info("[MatchService - checkLackOfResource] : count={}", count);
-			log.info("5-4");
 		}
 		else{
-			log.info("5-5");
 			count = userFeatureRepository.countMatchableUserByGenderAndPropensityAndAge(genderOption.getValue(),
 				propensityOption, age);
 			log.info("[MatchService - checkLackOfResource] : count={}", count);
-			log.info("5-6");
 		}
-		log.info("5-7");
 		return (count == 0)? true : false;
 	}
 }

@@ -1,6 +1,6 @@
 package comatchingfc.comatchingfc.admin.controller;
 
-import comatchingfc.comatchingfc.admin.dto.AdminRegisterReq;
+import comatchingfc.comatchingfc.admin.dto.req.AdminRegisterReq;
 import comatchingfc.comatchingfc.admin.service.AdminService;
 import comatchingfc.comatchingfc.player.dto.PlayerInfoReq;
 import comatchingfc.comatchingfc.player.service.PlayerService;
@@ -39,4 +39,5 @@ public class AdminController {
 
         return Response.ok();
     }
+
 }
