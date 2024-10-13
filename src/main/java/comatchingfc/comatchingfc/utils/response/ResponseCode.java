@@ -16,6 +16,10 @@ public enum ResponseCode {
 	ENEMY_NOT_FOUND(400, "MAT-002", HttpStatus.INTERNAL_SERVER_ERROR, "Can't find enemy"),
 	MATCH_ALREADY_EXIST(400, "MAT-003", HttpStatus.INTERNAL_SERVER_ERROR, "Already matched"),
 
+	//Notice response
+	NO_NOTICE(200, "NOT-001", HttpStatus.OK, "There is any notice exist"),
+
+
 	//Auth response
 	TOKEN_EXPIRED(401, "SEC-001", HttpStatus.UNAUTHORIZED, "Token is expired"),
 	JWT_ERROR(403, "SEC-002", HttpStatus.FORBIDDEN, "Jwt error occurred"),

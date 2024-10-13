@@ -1,16 +1,21 @@
 package comatchingfc.comatchingfc.user.controller;
 
+import java.util.List;
+
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;
 import comatchingfc.comatchingfc.user.dto.*;
 import comatchingfc.comatchingfc.user.dto.req.FeatureReq;
 import comatchingfc.comatchingfc.user.dto.res.PropensityRes;
 import comatchingfc.comatchingfc.user.dto.res.SavePropensityRes;
+import comatchingfc.comatchingfc.user.dto.res.UserNoticeRes;
 import comatchingfc.comatchingfc.user.service.CheerPropensityService;
+import comatchingfc.comatchingfc.user.service.UserNoticeService;
 import comatchingfc.comatchingfc.user.service.UserService;
 import comatchingfc.comatchingfc.utils.response.Response;
 import comatchingfc.comatchingfc.utils.security.SecurityUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +26,7 @@ public class UserController {
 
     private final UserService userService;
     private final CheerPropensityService cheerPropensityService;
+    private final UserNoticeService userNoticeService;
     private final SecurityUtil securityUtil;
 
     @GetMapping("/api/participations")
@@ -105,5 +111,10 @@ public class UserController {
         response.addHeader("Set-Cookie", securityUtil.deleteRefreshResponseCookie().toString());
 
         return Response.ok();
+    }
+
+    @GetMapping("/auth/user/api/inquiry/notice")
+    public Response<List<UserNoticeRes>> inquiryNotice(){
+        return Response.ok(userNoticeService.inquiryUserNotice());
     }
 }
