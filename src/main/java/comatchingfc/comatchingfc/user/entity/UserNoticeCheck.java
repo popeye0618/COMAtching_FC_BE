@@ -38,4 +38,10 @@ public class UserNoticeCheck extends BaseEntity {
 	@JoinColumn(name = "user_id")
 	private Users user;
 
+	private boolean isRead;
+
+	public void updateIsRead(boolean isRead){
+		this.isRead = isRead;
+	};
+
 }
