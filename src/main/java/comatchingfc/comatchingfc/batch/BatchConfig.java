@@ -1,9 +1,6 @@
 package comatchingfc.comatchingfc.batch;
 
-import comatchingfc.comatchingfc.batch.step.CheerPropensityStepConfig;
-import comatchingfc.comatchingfc.batch.step.UserAiInfoStepConfig;
-import comatchingfc.comatchingfc.batch.step.UserFeatureStepConfig;
-import comatchingfc.comatchingfc.batch.step.UsersStepConfig;
+import comatchingfc.comatchingfc.batch.step.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -27,6 +24,7 @@ public class BatchConfig {
     private final UserFeatureStepConfig userFeatureStepConfig;
     private final UserAiInfoStepConfig userAiInfoStepConfig;
     private final UsersStepConfig usersStepConfig;
+    private final MatchingHistoryStepConfig matchingHistoryStepConfig;
 
     @Bean
     public Job deleteAllUsersJob() {
@@ -34,6 +32,7 @@ public class BatchConfig {
                 .start(cheerPropensityStepConfig.deleteCheerPropensityStep())
                 .next(userFeatureStepConfig.deleteUserFeatureStep())
                 .next(userAiInfoStepConfig.deleteUserAiInfoStep())
+                .next(matchingHistoryStepConfig.deleteMatchingHistoryStep())
                 .next(usersStepConfig.deleteUsersStep())
                 .build();
     }
