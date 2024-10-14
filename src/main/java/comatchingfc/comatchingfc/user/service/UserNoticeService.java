@@ -34,13 +34,13 @@ public class UserNoticeService {
 	 */
 
 	@Transactional
-	public List<UserNoticeRes> inquiryUserNotice(){
+	public List<UserNoticeRes> inquiryUserNotice() {
 		Users user = securityUtil.getCurrentUserEntity();
 
 		List<UserNoticeCheck> readList = user.getUserNoticeCheckList();
 		List<Notice> noticeList = noticeRepository.findAll();
 
-		if(readList.size() == noticeList.size()){
+		if (readList.size() == noticeList.size()) {
 			throw new BusinessException(ResponseCode.NO_NOTICE);
 		}
 
@@ -50,13 +50,23 @@ public class UserNoticeService {
 		for (UserNoticeCheck userNoticeCheck : readList) {
 			Notice notice = userNoticeCheck.getNotice();
 
-			if (!noticeSet.contains(notice)) {
-				userNoticeCheck.updateIsRead(true);
-				response.add(new UserNoticeRes(notice.getBody(), notice.getExpireDate()));
+			if (noticeSet.contains(notice)) {
+				noticeSet.remove(notice);
 			}
 		}
 
-		return response;
+		for (Notice remainingNotice : noticeSet) {
+			UserNoticeCheck newNoticeCheck = UserNoticeCheck.builder()
+				.notice(remainingNotice)
+				.user(user)
+				.isRead(true)
+				.build();
 
+			userNoticeCheckRepository.save(newNoticeCheck);
+			response.add(new UserNoticeRes(remainingNotice.getTitle(), remainingNotice.getBody(),
+				remainingNotice.getExpireDate()));
+		}
+
+		return response;
 	}
 }
