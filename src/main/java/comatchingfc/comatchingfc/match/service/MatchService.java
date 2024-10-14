@@ -85,6 +85,8 @@ public class MatchService {
 			.enemy(enemyAiInfo.getUsers())
 			.build();
 
+		applier.addMatchingHistory(matchingHistory);
+
 		matchingHistoryRepository.save(matchingHistory);
 
 		return MatchRes.builder()
