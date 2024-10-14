@@ -16,6 +16,7 @@ public class NoticeService {
 	private final NoticeRepository noticeRepository;
 	public void registerNotice(NoticeRegisterReq noticeAddReq){
 		Notice notice= Notice.builder()
+			.title(noticeAddReq.getTitle())
 			.body(noticeAddReq.getBody())
 			.expireDate(noticeAddReq.getExpireDate())
 			.admin(securityUtil.getCurrentAdminEntity())
