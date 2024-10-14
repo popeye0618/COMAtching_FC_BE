@@ -9,6 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class UserNoticeRes {
 
+	private String title;
 	private String body;
 	private LocalDate expireDate;
 }
