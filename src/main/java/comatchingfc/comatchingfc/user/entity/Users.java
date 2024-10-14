@@ -85,13 +85,5 @@ public class Users extends BaseEntity {
         this.deactivated = false;
     }
 
-    public void addMatchingHistory(MatchingHistory matchingHistory) {
-        this.matchingHistory = matchingHistory;
-        if (matchingHistory.getApplier() != null && matchingHistory.getApplier() != this) {
-            matchingHistory.getApplier().addMatchingHistory(matchingHistory);
-        }
-        if (matchingHistory.getEnemy() != null && matchingHistory.getEnemy() != this) {
-            matchingHistory.getEnemy().addMatchingHistory(matchingHistory);
-        }
-    }
+    public void addMatchingHistory(MatchingHistory matchingHistory){ this.matchingHistory = matchingHistory; }
 }
