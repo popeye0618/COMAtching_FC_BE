@@ -32,6 +32,8 @@ public class Notice extends BaseEntity {
 	@Column(name = "notice_id")
 	private Long id;
 
+	private String title;
+
 	private String body;
 
 	private LocalDate expireDate;
@@ -44,7 +46,7 @@ public class Notice extends BaseEntity {
 	private List<UserNoticeCheck> userNoticeCheckList = new ArrayList<>();
 
 	@Builder
-	public Notice(String body, LocalDate expireDate, Admin admin){
+	public Notice(String body, LocalDate expireDate, String title ,Admin admin){
 		this.body = body;
 		this.expireDate = expireDate;
 		this.admin =  admin;

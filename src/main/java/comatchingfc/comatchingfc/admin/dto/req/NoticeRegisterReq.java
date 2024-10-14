@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public class NoticeRegisterReq {
 
+	private String title;
 	private String body;
 	private LocalDate expireDate;
 }
