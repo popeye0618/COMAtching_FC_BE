@@ -34,12 +34,16 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
 
         Response<?> res;
         if ("TOKEN_EXPIRED".equals(ex.getMessage())) {
-            res = Response.errorResponse(ResponseCode.TOKEN_EXPIRED);
-            log.info("[JwtExceptionFilter] - EXPIRE");
+            res = Response.errorResponse(ResponseCode.ACCESS_TOKEN_EXPIRED);
+            log.info("[JwtExceptionFilter] - ACCESS_TOKEN_EXPIRE");
+        } else if ("REFRESH_TOKEN_EXPIRED".equals(ex.getMessage())) {
+            res = Response.errorResponse(ResponseCode.REFRESH_TOKEN_EXPIRED);
+            log.info("[JwtExceptionFilter] - REFRESH_TOKEN_EXPIRE");
         } else if ("TOKEN_INVALID".equals(ex.getMessage())) {
             res = Response.errorResponse(ResponseCode.JWT_ERROR);
             log.info("[JwtExceptionFilter] - INVALID");
-        } else {
+        }
+        else {
             res = Response.errorResponse(ResponseCode.JWT_ERROR);
             log.info("[JwtExceptionFilter] - GENERAL_ERROR");
         }

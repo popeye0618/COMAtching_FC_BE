@@ -75,7 +75,7 @@ public class SecurityUtil {
     public ResponseCookie setRefreshResponseCookie(String refreshToken) {
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
                 .path("/auth/refresh")
 //                .domain(".comatching.site")
                 .maxAge(24 * 60 * 60) // 1일
@@ -87,7 +87,7 @@ public class SecurityUtil {
     public ResponseCookie setAccessResponseCookie(String accessToken) {
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true)
-                .secure(false) // HTTPS 환경에서만 전송하려면 true
+                .secure(true) // HTTPS 환경에서만 전송하려면 true
                 .path("/")
 //                .domain(".comatching.site")
                 .maxAge(60 * 60) // 1시간
@@ -99,7 +99,7 @@ public class SecurityUtil {
     public ResponseCookie deleteAccessResponseCookie() {
         return ResponseCookie.from("accessToken", "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
                 .path("/")
 //                .domain(".comatching.site")
                 .maxAge(0) // 쿠키 삭제
@@ -110,7 +110,7 @@ public class SecurityUtil {
     public ResponseCookie deleteRefreshResponseCookie() {
         return ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
 //                .domain(".comatching.site")
                 .path("/auth/refresh")
                 .maxAge(0) // 쿠키 삭제

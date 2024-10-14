@@ -49,12 +49,12 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String encryptedToken = getTokenFromCookies(request, "accessToken");
+        String encryptedAccessToken = getTokenFromCookies(request, "accessToken");
 
         try {
-            if (encryptedToken != null) {
+            if (encryptedAccessToken != null) {
                 // 토큰 복호화
-                String accessToken = jwtUtil.decryptToken(encryptedToken);
+                String accessToken = jwtUtil.decryptToken(encryptedAccessToken);
 
                 if (!jwtUtil.isExpired(accessToken)) {
                     // 복호화된 토큰 유효성 검증
@@ -71,6 +71,29 @@ public class JwtFilter extends OncePerRequestFilter {
             throw new JwtException("TOKEN_INVALID");
         } catch (JwtException e) {
             log.info("엑세스 토큰 오류");
+            throw new JwtException("TOKEN_INVALID");
+        }
+
+        String encryptedRefreshToken = getTokenFromCookies(request, "refreshToken");
+        try {
+            if (encryptedRefreshToken != null) {
+                // 토큰 복호화
+                String refreshToken = jwtUtil.decryptToken(encryptedRefreshToken);
+
+                if (!jwtUtil.isExpired(refreshToken)) {
+                    // 복호화된 토큰 유효성 검증
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+            }
+        } catch (ExpiredJwtException e) {
+            log.info("리프레시 토큰 만료");
+            throw new JwtException("REFRESH_TOKEN_EXPIRED");
+        } catch (SignatureException e) {
+            log.info("리프레시 토큰 무결성 오류");
+            throw new JwtException("TOKEN_INVALID");
+        } catch (JwtException e) {
+            log.info("리프레시 토큰 오류");
             throw new JwtException("TOKEN_INVALID");
         }
 

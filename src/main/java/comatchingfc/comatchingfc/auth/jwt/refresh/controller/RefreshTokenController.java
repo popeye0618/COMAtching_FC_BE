@@ -60,10 +60,18 @@ public class RefreshTokenController {
             String newAccessToken = jwtUtil.generateAccessToken(uuid, role);
             String newRefreshToken = jwtUtil.generateRefreshToken(uuid, role);
 
-            refreshTokenRedisService.saveRefreshToken(uuid, newRefreshToken);
+            // 기존 쿠키 삭제
+            ResponseCookie deleteAccessCookie = securityUtil.deleteAccessResponseCookie();
+            ResponseCookie deleteRefreshCookie = securityUtil.deleteRefreshResponseCookie();
+            response.addHeader(HttpHeaders.SET_COOKIE, deleteAccessCookie.toString());
+            response.addHeader(HttpHeaders.SET_COOKIE, deleteRefreshCookie.toString());
 
-            response.addHeader("Set-Cookie", "accessToken=" + securityUtil.setAccessResponseCookie(newAccessToken).toString() + "; SameSite=None; Secure");
-            response.addHeader("Set-Cookie", "refreshToken=" + securityUtil.setRefreshResponseCookie(newRefreshToken).toString() + "; SameSite=None; Secure" );
+            // 새 쿠키 설정
+            ResponseCookie accessCookie = securityUtil.setAccessResponseCookie(newAccessToken);
+            ResponseCookie refreshCookie = securityUtil.setRefreshResponseCookie(newRefreshToken);
+            refreshTokenRedisService.saveRefreshToken(uuid, newRefreshToken);
+            response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+            response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
             return Response.ok();
         } catch (Exception e) {
