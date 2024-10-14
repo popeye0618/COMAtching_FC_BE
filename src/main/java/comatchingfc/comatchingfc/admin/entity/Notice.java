@@ -50,5 +50,6 @@ public class Notice extends BaseEntity {
 		this.body = body;
 		this.expireDate = expireDate;
 		this.admin =  admin;
+		this.title = title;
 	}
 }

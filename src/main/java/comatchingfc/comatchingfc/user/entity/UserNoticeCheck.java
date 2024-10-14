@@ -17,6 +17,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -43,5 +44,12 @@ public class UserNoticeCheck extends BaseEntity {
 	public void updateIsRead(boolean isRead){
 		this.isRead = isRead;
 	};
+
+	@Builder
+	public UserNoticeCheck(Notice notice, Users user, boolean isRead){
+		this.notice = notice;
+		this.user = user;
+		this.isRead = isRead;
+	}
 
 }
