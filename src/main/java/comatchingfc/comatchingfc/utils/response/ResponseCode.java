@@ -21,7 +21,8 @@ public enum ResponseCode {
 
 
 	//Auth response
-	TOKEN_EXPIRED(401, "SEC-001", HttpStatus.UNAUTHORIZED, "Token is expired"),
+	ACCESS_TOKEN_EXPIRED(401, "SEC-001", HttpStatus.UNAUTHORIZED, "AccessToken is expired"),
+	REFRESH_TOKEN_EXPIRED(401, "SEC-009", HttpStatus.UNAUTHORIZED, "RefreshToken is expired"),
 	JWT_ERROR(403, "SEC-002", HttpStatus.FORBIDDEN, "Jwt error occurred"),
 	ACCOUNT_ID_DUPLICATED(409, "SEC-003", HttpStatus.CONFLICT, "AccountId is duplicated"),
 	INVALID_LOGIN(403, "SEC-004", HttpStatus.FORBIDDEN, "Invalid AccountId or Password"),
