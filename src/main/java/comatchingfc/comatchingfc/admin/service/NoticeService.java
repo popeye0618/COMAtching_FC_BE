@@ -8,6 +8,7 @@ import comatchingfc.comatchingfc.admin.repository.NoticeRepository;
 import comatchingfc.comatchingfc.utils.security.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -16,6 +17,8 @@ public class NoticeService {
 
 	private final SecurityUtil securityUtil;
 	private final NoticeRepository noticeRepository;
+
+	@Transactional
 	public void registerNotice(NoticeRegisterReq noticeAddReq){
 
 		Notice notice= Notice.builder()
@@ -27,6 +30,4 @@ public class NoticeService {
 
 		noticeRepository.save(notice);
 	}
-
-
 }
