@@ -10,6 +10,7 @@ import comatchingfc.comatchingfc.user.entity.UserAiInfo;
 import comatchingfc.comatchingfc.user.entity.UserFeature;
 import comatchingfc.comatchingfc.user.entity.Users;
 import comatchingfc.comatchingfc.user.enums.TeamSide;
+import comatchingfc.comatchingfc.user.enums.UserRole;
 import comatchingfc.comatchingfc.user.repository.UserAiInfoRepository;
 import comatchingfc.comatchingfc.user.repository.UserFeatureRepository;
 import comatchingfc.comatchingfc.user.repository.UserRepository;
@@ -42,45 +43,50 @@ public class AuthService {
             throw new BusinessException(ResponseCode.BAD_REQUEST);
         }
 
+        String userUuid;
+        String userRole;
+
+        Optional<Users> userOpt = userRepository.findByIdentifyKey(userLoginReq.getTicket());
+        if (userOpt.isPresent()) {
+            Users user = userOpt.get();
+            if (user.getRole() == UserRole.ROLE_USER) {
+                if (user.getDeactivated()) {
+                    throw new BusinessException(ResponseCode.DEACTIVATED_USER);
+                }
+                userUuid = UUIDUtil.bytesToHex(user.getUserAiInfo().getUuid());
+                userRole = user.getRole().toString();
+
+                TokenRes tokenRes = tokenUtil.makeTokenRes(userUuid, userRole);
+
+                return new UserLoginRes(TeamSide.HOME, userRole, tokenRes);
+            }
+        }
+
         ReserveAuthResMsg reserveAuthResMsg = authRabbitMQUtil.checkReserveNumber(userLoginReq.getTicket());
         if(!reserveAuthResMsg.isAuthSuccess()){
             throw new BusinessException(ResponseCode.INVALID_TICKET);
         }
 
-        Optional<Users> userOpt = userRepository.findByIdentifyKey(userLoginReq.getTicket());
-        String userUuid;
-        String userRole;
+        Users user = Users.builder()
+                .identifyKey(userLoginReq.getTicket())
+                .build();
 
-        if (userOpt.isEmpty()) {
-            Users user = Users.builder()
-                    .identifyKey(userLoginReq.getTicket())
-                    .build();
+        UserAiInfo userAiInfo = UserAiInfo.builder()
+                .uuid(UUIDUtil.createUUID())
+                .build();
 
-            UserAiInfo userAiInfo = UserAiInfo.builder()
-                    .uuid(UUIDUtil.createUUID())
-                    .build();
+        UserFeature userFeature = UserFeature.builder().build();
 
-            UserFeature userFeature = UserFeature.builder().build();
+        userAiInfo.setUsers(user);
+        userFeature.setUserAiInfo(userAiInfo);
+        userFeature.setTeamSide(reserveAuthResMsg.getTeamSide());
 
-            userAiInfo.setUsers(user);
-            userFeature.setUserAiInfo(userAiInfo);
-            userFeature.setTeamSide(reserveAuthResMsg.getTeamSide());
+        userRepository.save(user);
+        userAiInfoRepository.save(userAiInfo);
+        userFeatureRepository.save(userFeature);
 
-            userRepository.save(user);
-            userAiInfoRepository.save(userAiInfo);
-            userFeatureRepository.save(userFeature);
-
-            userUuid = UUIDUtil.bytesToHex(userAiInfo.getUuid());
-            userRole = user.getRole().toString();
-
-        } else {
-            Users user = userOpt.get();
-            if (user.getDeactivated()) {
-                throw new BusinessException(ResponseCode.DEACTIVATED_USER);
-            }
-            userUuid = UUIDUtil.bytesToHex(user.getUserAiInfo().getUuid());
-            userRole = user.getRole().toString();
-        }
+        userUuid = UUIDUtil.bytesToHex(userAiInfo.getUuid());
+        userRole = user.getRole().toString();
 
         TokenRes tokenRes = tokenUtil.makeTokenRes(userUuid, userRole);
 
