@@ -75,7 +75,7 @@ public class MatchService {
 		List<CheerPropensity> enemyCheerPropensities = enemyFeature.getCheerPropensities();
 
 		UserCrudReqMsg userCrudReqMsg = new UserCrudReqMsg(enemyFeature, enemyCheerPropensities, enemyAiInfo);
-//		userRabbitMQUtil.requestUserToCsv(userCrudReqMsg, DELETE);
+		userRabbitMQUtil.requestUserToCsv(userCrudReqMsg, DELETE);
 
 		applierAiInfo.updateIsPick(true);
 		enemyAiInfo.updateIsPicked(true);
@@ -107,7 +107,7 @@ public class MatchService {
 			log.info("[MatchService - checkLackOfResource] : count={}", count);
 		}
 		else{
-			count = userFeatureRepository.countMatchableUserByGenderAndPropensityAndAge(genderOption.getValue(),
+			count = userFeatureRepository.countMatchableUserByGenderAndPropensityAndAge(genderOption,
 				propensityOption, age);
 			log.info("[MatchService - checkLackOfResource] : count={}", count);
 		}

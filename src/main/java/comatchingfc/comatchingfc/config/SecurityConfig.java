@@ -38,7 +38,8 @@ public class SecurityConfig {
     private final AdminUserDetailsService adminUserDetailsService;
 
     private static final List<String> CORS_WHITELIST = List.of(
-            "https://fc.comatching.site"
+            "https://fc.comatching.site",
+            "https://bucheon.fc-comatching.site"
     );
 
     private static final List<String> ADMIN_WHITELIST = List.of(
