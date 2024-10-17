@@ -107,7 +107,7 @@ public class MatchService {
 			log.info("[MatchService - checkLackOfResource] : count={}", count);
 		}
 		else{
-			count = userFeatureRepository.countMatchableUserByGenderAndPropensityAndAge(genderOption.getValue(),
+			count = userFeatureRepository.countMatchableUserByGenderAndPropensityAndAge(genderOption,
 				propensityOption, age);
 			log.info("[MatchService - checkLackOfResource] : count={}", count);
 		}
